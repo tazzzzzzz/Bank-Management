@@ -63,14 +63,18 @@ validate_dob:
 citizenship_validation:
     printf("\nEnter the citizenship number:");
     scanf("%s", check.citizenship);
+    printf("\nFTELL:%d",ftell(ptr));
+    fseek (ptr , 0 , SEEK_SET );
+    printf("\nFTELL:%d",ftell(ptr));
+    printf("\n%s",check.citizenship);
     while (fscanf(ptr, "%d %s %d/%d/%d %d %s %s %lf %s %f %d/%d/%d\n", &add.acc_no, add.name, &add.dob.day, &add.dob.month, &add.dob.year, &add.age, add.address, add.citizenship, &add.phone, add.acc_type, &add.amt, &add.deposit.day, &add.deposit.month, &add.deposit.year) != EOF)
     {
-        if (check.citizenship == add.citizenship)
+        if (!strcmp(check.citizenship,add.citizenship))
         {
             if(strcmp(check.name,add.name)){
                 printf("Uh Oh! Try again with proper credentials.");   
                 fordelay(1000000000);
-                fseek ( ptr , 0 , SEEK_SET );
+                fseek (ptr , 0 , SEEK_SET );
                 goto citizenship_validation;
             }
         }
@@ -120,8 +124,8 @@ void transact(void)
 {
     int choice, test = 0;
     FILE *old, *newrec;
-    old = fopen("record.dat", "r");
-    newrec = fopen("new.dat", "w");
+    old = fopen("record.txt", "r");
+    newrec = fopen("new.txt", "w");
 
     printf("Enter the account no. of the customer:");
     scanf("%d", &transaction.acc_no);
@@ -164,8 +168,8 @@ void transact(void)
     }
     fclose(old);
     fclose(newrec);
-    remove("record.dat");
-    rename("new.dat", "record.dat");
+    remove("record.txt");
+    rename("new.txt", "record.txt");
     if (test != 1)
     {
         printf("\n\nRecord not found!!");
@@ -195,14 +199,17 @@ void transact(void)
         else
             return;
     }
+
+    fclose(old);
+    fclose(newrec);
 }
 
 void erase(void)
 {
     FILE *old, *newrec;
     int test = 0;
-    old = fopen("record.dat", "r");
-    newrec = fopen("new.dat", "w");
+    old = fopen("record.txt", "r");
+    newrec = fopen("new.txt", "w");
     printf("Enter the account no. of the customer you want to delete:");
     scanf("%d", &rem.acc_no);
     while (fscanf(old, "%d %s %d/%d/%d %d %s %s %lf %s %f %d/%d/%d", &add.acc_no, add.name, &add.dob.day, &add.dob.month, &add.dob.year, &add.age, add.address, add.citizenship, &add.phone, add.acc_type, &add.amt, &add.deposit.day, &add.deposit.month, &add.deposit.year) != EOF)
@@ -218,8 +225,8 @@ void erase(void)
     }
     fclose(old);
     fclose(newrec);
-    remove("record.dat");
-    rename("new.dat", "record.dat");
+    remove("record.txt");
+    rename("new.txt", "record.txt");
     if (test == 0)
     {
         printf("\nRecord not found!!\a\a\a");
