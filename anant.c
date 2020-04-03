@@ -15,6 +15,7 @@ void new_acc()
         system("cls");
         printf("\t\t\t ADD RECORD  ");
         
+        
         SYSTEMTIME t; 
         GetLocalTime(&t);
 
