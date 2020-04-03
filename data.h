@@ -25,6 +25,7 @@ account add,upd,check,rem,transaction;
 
 int valid_date(int day, int month, int year, int day1, int month1, int year1);
 
+char* getPass();
 void start();
 float interest(float t,float amount,int rate);
 void fordelay(int j);
