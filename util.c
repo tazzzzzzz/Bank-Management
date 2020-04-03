@@ -21,6 +21,45 @@ void fordelay(int j)
          k=i;
 }
 
+int valid_date(int dd, int mm, int yy, int day, int month, int year)
+{
+    if(yy<1900){
+        return 0;
+    }
+    if( (yy>year) || ((yy==year) && (mm>month)) || ((yy==year) && (mm==month) && (dd>day))){
+        return 0;
+    }
+    
+    if(mm>12){
+        return 0;
+    }
+
+    if(mm==2){        
+        if( ((yy%4==0) && (yy%100!=0))|| (yy%400==0)){
+            if(dd>29)
+                return 0;
+        }
+        else{
+            if(dd>28)
+                return 0;
+        }
+    }
+    
+    else if((mm==1) || (mm==3)  || (mm==5) || (mm==7) || (mm==8) || (mm==10) || (mm==12)){
+        if(dd>31){
+            return 0;
+        }
+    }
+    
+    else{
+        if(dd>30){
+            return 0;
+        }
+    }
+    return 1;
+}
+
+
 void menu(void)
 {   int choice;
     system("cls");
