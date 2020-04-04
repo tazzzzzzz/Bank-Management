@@ -246,6 +246,7 @@ void erase(void)
             goto erase_invalid;
         }
     }
+    
     else
     {
         printf("\nEnter 1 to go to the main menu and 0 to exit:");

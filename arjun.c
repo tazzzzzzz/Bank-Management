@@ -7,7 +7,7 @@
 
 
 void view_list()
-{
+{ 
     FILE *view;
     view=fopen("record.dat","r");
     int test=0;
@@ -19,6 +19,7 @@ void view_list()
            printf("\n%6d\t %10s\t\t\t%10s\t\t%.0lf",add.acc_no,add.name,add.address,add.phone);
            test++;
        }
+
 
     fclose(view);
     if (test==0)
