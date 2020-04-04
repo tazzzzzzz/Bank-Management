@@ -1,8 +1,8 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
-#include<conio.h>
-#include<windows.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <conio.h>
+#include <windows.h>
 #include "anant.h"
 #include "arjun.h"
 #include "data.h"
@@ -11,182 +11,187 @@
 #define TAB 9
 #define BKSP 8
 
-float interest(float t,float amount,int rate)
+float interest(float t, float amount, int rate)
 {
     float SI;
-    SI=(rate*t*amount)/100.0;
+    SI = (rate * t * amount) / 100.0;
     return (SI);
-
 }
 
 void fordelay(int j)
-{   
-    int i,k;
-    for(i=0;i<j;i++)
-         k=i;
+{
+    int i, k;
+    for (i = 0; i < j; i++)
+        k = i;
 }
 
 int valid_date(int dd, int mm, int yy, int day, int month, int year)
 {
-    if(yy<1900){
+    /*
+EXP00-A. Use parentheses for precedence of operation
+*/
+    if (yy < 1900)
+    {
         return 0;
     }
-    if( (yy>year) || ((yy==year) && (mm>month)) || ((yy==year) && (mm==month) && (dd>day))){
-        return 0;
-    }
-    
-    if(mm>12){
+    if ((yy > year) || ((yy == year) && (mm > month)) || ((yy == year) && (mm == month) && (dd > day)))  
+/*
+EXP33-C. Do not reference uninitialized variables.
+(All possibilities have been thoroughly considered.)
+*/
+    {
         return 0;
     }
 
-    if(mm==2){        
-        if( ((yy%4==0) && (yy%100!=0))|| (yy%400==0)){
-            if(dd>29)
+    if (mm > 12)
+    {
+        return 0;
+    }
+
+    if (mm == 2)
+    {
+        if (((yy % 4 == 0) && (yy % 100 != 0)) || (yy % 400 == 0))
+        {
+            if (dd > 29)
                 return 0;
         }
-        else{
-            if(dd>28)
+        else
+        {
+            if (dd > 28)
                 return 0;
         }
     }
-    
-    else if((mm==1) || (mm==3)  || (mm==5) || (mm==7) || (mm==8) || (mm==10) || (mm==12)){
-        if(dd>31){
+
+    else if ((mm == 1) || (mm == 3) || (mm == 5) || (mm == 7) || (mm == 8) || (mm == 10) || (mm == 12))
+    {
+        if (dd > 31)
+        {
             return 0;
         }
     }
-    
-    else{
-        if(dd>30){
+
+    else
+    {
+        if (dd > 30)
+        {
             return 0;
         }
     }
     return 1;
 }
 
-
 void menu(void)
-{   int choice;
+{
+    int choice;
     system("cls");
-   //system("color 99");
+    //system("color 99");
     printf("\n\n\t\t\tCUSTOMER ACCOUNT BANKING MANAGEMENT SYSTEM");
     printf("\n\n\n\t\t\t WELCOME TO THE MAIN MENU ");
     printf("\n\n\t\t1.Create new account\n\t\t2.Update information of existing account\n\t\t3.For transactions\n\t\t4.Check the details of existing account\n\t\t5.Removing existing account\n\t\t6.View customer's list\n\t\t7.Exit\n\n\n\n\n\t\t Enter your choice:");
-    scanf("%d",&choice);
+    scanf("%d", &choice);
 
     system("cls");
-    switch(choice)
+    switch (choice)
     {
-        case 1:new_acc();
+    case 1:
+        new_acc();
         break;
-        case 2:edit();
+    case 2:
+        edit();
         break;
-        case 3:transact();
+    case 3:
+        transact();
         break;
-        case 4:see();
+    case 4:
+        see();
         break;
-        case 5:erase();
+    case 5:
+        erase();
         break;
-        case 6:view_list();
+    case 6:
+        view_list();
         break;
-        case 7:return;
+    case 7:
+        return;
         break;
-
     }
-}
-
-
-
-
-char* getPass(char* pwd){
-	int i = 0;
-	char ch;
-
-	printf("Enter your password. Hit ENTER to confirm.\n");
-	printf("Password:");
-
-	while(1){
-		ch = getch();
-
-		if(ch == ENTER || ch == TAB){
-			pwd[i] = '\0';
-			break;
-		}else if(ch == BKSP){
-			if(i > 0){
-				i--;
-				printf("\b \b");		//for backspace
-			}
-		}else{
-			pwd[i++] = ch;
-			printf("* \b");				//to replace password character with *
-		}
-	}//while ends here
-
-	return pwd;
 }
 
 void start()
 {
-    char pwd[10],password[10]="root";
-    int i=0;
-    
-    	int p = 0;
-	char ch;
+    char pwd[10], password[10] = "root";
+    int i = 0;
 
-	printf("Enter your password. Hit ENTER to confirm.\n");
-	printf("Password:");
+    int p = 0;
+    char ch;
 
-	while(1){
-		ch = getch();	//get key
+    printf("Enter your password. Hit ENTER to confirm.\n");
+    printf("Password:");
 
-		if(ch == ENTER || ch == TAB){
-			pwd[p] = '\0';
-			break;
-		}else if(ch == BKSP){
-			if(p > 0){
-				p--;
-				printf("\b \b");		//for backspace
-			}
-		}else{
-			pwd[p++] = ch;
-			printf("* \b");				//to replace password character with *
-		}
+    while (1)
+    {
+        ch = getch(); //get key
+
+        if (ch == ENTER || ch == TAB)
+        {
+            pwd[p] = '\0';
+            break;
+        }
+        else if (ch == BKSP)
+        {
+            if (p > 0)
+            {
+                p--;
+                printf("\b \b"); //for backspace
+            }
+        }
+        else
+        {
+            pwd[p] = ch;
+            p+=1;
+/*            
+EXP30-C. Do not depend on order of evaluation between sequence points
+*/
+            printf("* \b"); //to replace password character with *
+        }
     }
 
-    if (strcmp(pwd,password)==0)
+    if (strcmp(pwd, password) == 0)
+    {
+        printf("\n\nPassword Match!\nLOADING");
+        for (i = 0; i <= 6; i++)
         {
-            printf("\n\nPassword Match!\nLOADING");
-            for(i=0;i<=6;i++)
-            {
-                fordelay(100000000);
-                printf(".");
-            }
-                system("cls");
-                menu();
+            fordelay(100000000);
+            printf(".");
         }
+        system("cls");
+        menu();
+    }
     else
-        {   printf("\n\nWrong password!!\a\a\a");
-            login_try:
-            printf("\nEnter 1 to try again and 0 to exit:");
-            scanf("%d",&main_exit);
-            if (main_exit==1)
-                    {
+    {
+        printf("\n\nWrong password!!\a\a\a");
+    login_try:
+        printf("\nEnter 1 to try again and 0 to exit:");
+        scanf("%d", &main_exit);
+        if (main_exit == 1)
+        {
 
-                        system("cls");
-                        start();
-                    }
-
-            else if (main_exit==0)
-                    {
-                    system("cls");
-                    return;
-                    }
-            else
-                    {printf("\nInvalid!");
-                    fordelay(1000000000);
-                    system("cls");
-                    goto login_try;}
-
+            system("cls");
+            start();
         }
+
+        else if (main_exit == 0)
+        {
+            system("cls");
+            return;
+        }
+        else
+        {
+            printf("\nInvalid!");
+            fordelay(1000000000);
+            system("cls");
+            goto login_try;
+        }
+    }
     return;
 }
