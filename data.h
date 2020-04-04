@@ -2,6 +2,7 @@
 
 int i,j;
 int main_exit;
+#define FORMAT "%d %s %d/%d/%d %d %s %s %lf %s %f %d/%d/%d"
 
 struct date{
     int month,day,year;
