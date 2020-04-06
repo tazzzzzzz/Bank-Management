@@ -11,12 +11,17 @@
 #define TAB 9
 #define BKSP 8
 
-float interest(float t, float amount, int rate)
-{
-    float SI;
-    SI = (rate * t * amount) / 100.0;
-    return (SI);
-}
+// static inline float interest(float t, float amount, int rate)
+// {     
+// /*
+//     CERT C:    
+//         PRE31-C. Avoid side effects in arguments to unsafe macros
+//     Secured Programming with C:
+//         PRE00-C. Prefer inline or static functions to function-like macros
+    
+// */
+//     return ((rate * t * amount) / 100.0);
+// }
 
 void fordelay(int j)
 {
@@ -27,26 +32,20 @@ void fordelay(int j)
 
 int valid_date(int dd, int mm, int yy, int day, int month, int year)
 {
-    /*
-EXP00-A. Use parentheses for precedence of operation
+/*
+    EXP00-A. Use parentheses for precedence of operation
 */
     if (yy < 1900)
-    {
         return 0;
-    }
     if ((yy > year) || ((yy == year) && (mm > month)) || ((yy == year) && (mm == month) && (dd > day)))  
+        return 0;
 /*
 EXP33-C. Do not reference uninitialized variables.
 (All possibilities have been thoroughly considered.)
 */
-    {
-        return 0;
-    }
 
     if (mm > 12)
-    {
         return 0;
-    }
 
     if (mm == 2)
     {
@@ -65,24 +64,55 @@ EXP33-C. Do not reference uninitialized variables.
     else if ((mm == 1) || (mm == 3) || (mm == 5) || (mm == 7) || (mm == 8) || (mm == 10) || (mm == 12))
     {
         if (dd > 31)
-        {
             return 0;
-        }
+
     }
 
     else
     {
         if (dd > 30)
-        {
             return 0;
-        }
     }
     return 1;
 }
 
+
+int findAge(int current_date, int current_month, int current_year, int birth_date, int birth_month, int birth_year) 
+{ 
+    // days of every month 
+    int month[] = { 31, 28, 31, 30, 31, 30, 31,  
+                          31, 30, 31, 30, 31 }; 
+  
+    // if birth date is greater then current birth 
+    // month then do not count this month and add 30  
+    // to the date so as to subtract the date and 
+    // get the remaining days 
+    if (birth_date > current_date) { 
+        current_date = current_date + month[birth_month - 1]; 
+        current_month = current_month - 1; 
+    } 
+  
+    // if birth month exceeds current month, then do 
+    // not count this year and add 12 to the month so 
+    // that we can subtract and find out the difference 
+    if (birth_month > current_month) { 
+        current_year = current_year - 1; 
+        current_month = current_month + 12; 
+    } 
+  
+    // calculate date, month, year 
+    int calculated_date = current_date - birth_date; 
+    int calculated_month = current_month - birth_month; 
+    int calculated_year = current_year - birth_year; 
+  
+    // return the present age 
+    return calculated_year;
+} 
+
 void menu(void)
 {
     int choice;
+menu:
     system("cls");
     //system("color 99");
     printf("\n\n\t\t\tCUSTOMER ACCOUNT BANKING MANAGEMENT SYSTEM");
@@ -95,21 +125,27 @@ void menu(void)
     {
     case 1:
         new_acc();
+        goto menu;
         break;
     case 2:
         edit();
+        goto menu;
         break;
     case 3:
         transact();
+        goto menu;
         break;
     case 4:
         see();
+        goto menu;
         break;
     case 5:
         erase();
+        goto menu;
         break;
     case 6:
         view_list();
+        goto menu;
         break;
     case 7:
         return;
