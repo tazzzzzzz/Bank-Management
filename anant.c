@@ -8,7 +8,7 @@
 void new_acc()
 {
     int choice;
-    int test = 0;
+    //int test = 0;
     FILE *ptr;
 
     ptr = fopen("record.txt", "a+");
@@ -29,7 +29,7 @@ account_no:
     scanf("%d", &check.acc_no);
     while (fscanf(ptr, FORMAT, &add.acc_no, add.name, &add.dob.month, &add.dob.day, &add.dob.year, &add.age, add.address, add.citizenship, &add.phone, add.acc_type, &add.amt, &add.deposit.month, &add.deposit.day, &add.deposit.year) != EOF)
     {
-        printf("\n%d", test++);
+  //      printf("\n%d", test++);
         if (check.acc_no == add.acc_no)
         {
             printf("Account no. already in use!");
@@ -60,10 +60,10 @@ account_no:
 citizenship_validation:
     printf("\nEnter the citizenship number:");
     scanf("%s", add.citizenship);
-    printf("\nFTELL:%d",ftell(ptr));
+//    printf("\nFTELL:%d",ftell(ptr));
     fseek (ptr , 0 , SEEK_SET );
-    printf("\nFTELL:%d",ftell(ptr));
-    printf("\n%s",add.citizenship);
+ //   printf("\nFTELL:%d",ftell(ptr));
+//    printf("\n%s",add.citizenship);
     while (fscanf(ptr, FORMAT, &check.acc_no, check.name, &check.dob.day, &check.dob.month, &check.dob.year, &check.age, check.address, check.citizenship, &check.phone, check.acc_type, &check.amt, &check.deposit.day, &check.deposit.month, &check.deposit.year)!=EOF)
     {
         if (!strcmp(check.citizenship,add.citizenship))
@@ -81,7 +81,16 @@ citizenship_validation:
     scanf("%lf", &add.phone);
     printf("\nEnter the amount to deposit:$");
     scanf("%f", &add.amt);
-    printf("\nType of account:\n\t#Saving\n\t#Current\n\t#Fixed1(for 1 year)\n\t#Fixed2(for 2 years)\n\t#Fixed3(for 3 years)\n\n\tEnter your choice:");
+    if(add.amt<=10)
+    {
+        printf("You need to deposit a minimum of $10.");
+        goto amount_to_deposit;
+    }
+
+    printf("\nType of account: ");
+    printf("\n\t-> Saving\n\t-> Current\n");
+    printf("\t-> Fixed1(for 1 year)\n\t-> Fixed2(for 2 years)\n\t-> Fixed3(for 3 years)");
+    printf("\n\n\tEnter your choice:");
     scanf("%s", add.acc_type);
 
     fprintf(ptr, FORMAT, add.acc_no, add.name, add.dob.month, add.dob.day, add.dob.year, add.age, add.address, add.citizenship, add.phone, add.acc_type, add.amt, add.deposit.month, add.deposit.day, add.deposit.year);
