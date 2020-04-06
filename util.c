@@ -140,7 +140,7 @@ menu:
         goto menu;
         break;
     case 5:
-        erase();
+        delete();
         goto menu;
         break;
     case 6:
@@ -160,7 +160,7 @@ void start()
 
     int p = 0;
     char ch;
-
+login_attempt:
     printf("Enter your password. Hit ENTER to confirm.\n");
     printf("Password:");
 
@@ -213,13 +213,13 @@ EXP30-C. Do not depend on order of evaluation between sequence points
         {
 
             system("cls");
-            start();
+            goto login_attempt;
         }
 
         else if (main_exit == 0)
         {
             system("cls");
-            return;
+            exit(0);
         }
         else
         {

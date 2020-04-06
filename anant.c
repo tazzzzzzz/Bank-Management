@@ -195,7 +195,7 @@ void transact(void)
     fclose(newrec);
 }
 
-void erase(void)
+void delete(void)
 {
     FILE *old, *newrec;
     int test = 0;
@@ -221,7 +221,7 @@ void erase(void)
     if (test == 0)
     {
         printf("\nRecord not found!!\a\a\a");
-    erase_invalid:
+    delete_invalid:
         printf("\nEnter 0 to try again,1 to return to main menu and 2 to exit:");
         scanf("%d", &main_exit);
 
@@ -230,11 +230,11 @@ void erase(void)
         else if (main_exit == 2)
             exit(0);
         else if (main_exit == 0)
-            erase();
+            delete();
         else
         {
             printf("\nInvalid!\a");
-            goto erase_invalid;
+            goto delete_invalid;
         }
     }
     

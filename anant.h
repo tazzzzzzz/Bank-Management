@@ -4,4 +4,4 @@ void create();
 
 void transact(void);
 
-void erase(void);
+void delete(void);
