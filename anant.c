@@ -171,9 +171,9 @@ void transact(void)
         if (main_exit == 0)
             transact();
         else if (main_exit == 1)
-            menu();
-        else if (main_exit == 2)
             return;
+        else if (main_exit == 2)
+            exit(0);
         else
         {
             printf("\nInvalid!");
@@ -186,9 +186,9 @@ void transact(void)
         scanf("%d", &main_exit);
         system("cls");
         if (main_exit == 1)
-            menu();
-        else
             return;
+        else
+            exit(0);
     }
 
     fclose(old);
@@ -226,9 +226,9 @@ void erase(void)
         scanf("%d", &main_exit);
 
         if (main_exit == 1)
-            menu();
-        else if (main_exit == 2)
             return;
+        else if (main_exit == 2)
+            exit(0);
         else if (main_exit == 0)
             erase();
         else
@@ -244,8 +244,8 @@ void erase(void)
         scanf("%d", &main_exit);
         system("cls");
         if (main_exit == 1)
-            menu();
-        else
             return;
+        else
+            exit(0);
     }
 }
