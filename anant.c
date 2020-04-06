@@ -128,17 +128,18 @@ void transact(void)
             test = 1;
             if (strcmpi(add.acc_type, "fixed1") == 0 || strcmpi(add.acc_type, "fixed2") == 0 || strcmpi(add.acc_type, "fixed3") == 0)
             {
-                printf("\a\a\a\n\nYOU CANNOT DEPOSIT OR WITHDRAW CASH IN FIXED ACCOUNTS!!!!!");
+                printf("\a\a\a\n\nYou cannot deposit or withdraw cash from fixed accounts. Kindly wait until more transaction features are made available.");
                 fordelay(1000000000);
                 system("cls");
-                menu();
+                return;
             }
-            printf("\n\nDo you want to\n1.Deposit\n2.Withdraw?\n\nEnter your choice(1 for deposit and 2 for withdraw):");
+        transact_account:
+            printf("\n\nTransaction:\n1.Deposit\n2.Withdraw\nEnter your choice (1 for Deposit and 2 for Withdrawal):");
             scanf("%d", &choice);
             if (choice == 1)
             {
                 printf("Enter the amount you want to deposit:$ ");
-                scanf("%f", &transaction.amt);
+                scanf("%f", &transaction.amt);             
                 add.amt += transaction.amt;
                 fprintf(newrec, FORMAT, add.acc_no, add.name, add.dob.day, add.dob.month, add.dob.year, add.age, add.address, add.citizenship, add.phone, add.acc_type, add.amt, add.deposit.month, add.deposit.day, add.deposit.year);
                 printf("\n\nDeposited successfully!");
@@ -147,7 +148,13 @@ void transact(void)
             {
                 printf("Enter the amount you want to withdraw:$ ");
                 scanf("%f", &transaction.amt);
-                add.amt -= transaction.amt;
+                if(add.amt-10<transaction.amt)
+                {
+                    printf("Transaction declined. Insufficient Funds in accounnt.");
+                    goto transact_account;
+                }  
+                else
+                    add.amt -= transaction.amt;
                 fprintf(newrec, FORMAT, add.acc_no, add.name, add.dob.day, add.dob.month, add.dob.year, add.age, add.address, add.citizenship, add.phone, add.acc_type, add.amt, add.deposit.month, add.deposit.day, add.deposit.year);
                 printf("\n\nWithdrawn successfully!");
             }
