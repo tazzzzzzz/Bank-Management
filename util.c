@@ -124,7 +124,7 @@ menu:
     switch (choice)
     {
     case 1:
-        new_acc();
+        create();
         goto menu;
         break;
     case 2:

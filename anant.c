@@ -5,7 +5,7 @@
 #include "data.h"
 
 
-void new_acc()
+void create()
 {
     int choice;
     //int test = 0;
@@ -68,7 +68,6 @@ citizenship_validation:
     {
         if (!strcmp(check.citizenship,add.citizenship))
         {
-            printf("\n%d %d %d  FTELL:%d",test++, check.acc_no, add.acc_no,ftell(ptr));
             if(strcmp(check.name,add.name)){
                 printf("Uh Oh! Try again with proper credentials.");   
                 fordelay(1000000000);
@@ -79,6 +78,7 @@ citizenship_validation:
     }
     printf("\nEnter the phone number: ");
     scanf("%lf", &add.phone);
+amount_to_deposit:
     printf("\nEnter the amount to deposit:$");
     scanf("%f", &add.amt);
     if(add.amt<=10)
