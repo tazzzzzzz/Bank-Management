@@ -28,6 +28,11 @@ DCL32-C. Guarantee identifiers are unique
 
 void view_list()
 {
+    /*
+    RECOMMENDATIONS/RULES
+    DCL05-A. Use typedefs to improve code readability
+    */
+    typedef int flag;
     //Display Records as a List
     /*
     RECOMMENDATION/RULES
@@ -49,7 +54,7 @@ void view_list()
         exit(0);
     }
 
-    int test=0; //Iterate Test variable to keep track of records
+    flag test=0; //Iterate Test variable to keep track of records
     system("cls");
     printf("________________________________________________________________________________________________________________________");
     printf("\nACC. NO.\tNAME\t\t\tADDRESS\t\t\t\t\tPHONE\n");
@@ -86,8 +91,15 @@ void view_list()
 
 void edit(void)
 {
+    /*
+    RECOMMENDATIONS/RULES
+    DCL05-A. Use typedefs to improve code readability
+    */
+    typedef int flag;
+    typedef int option;
     //Update Values in pre-existing Records
-    int choice,test=0;
+    option choice;
+    flag test=0;
     /*
     RECOMMENDATIONS/RULES
     DCL00-A. Declare immutable values using const or enum
@@ -181,6 +193,12 @@ void edit(void)
 
 void see(void)
 {
+    /*
+    RECOMMENDATIONS/RULES
+    DCL05-A. Use typedefs to improve code readability
+    */
+    typedef int flag;
+    typedef int option;
     //Function to view details of a particular record
     /*
     RECOMMENDATIONS/RULES
@@ -201,8 +219,9 @@ void see(void)
         fprintf(stderr, "Error opening file: %s\n", strerror( errnum ));
         exit(0);
     }
-    int test=0,rate;
-    int choice;
+    flag test=0;
+    int rate;
+    option choice;
     float time;
     float intrst;
     /*
@@ -224,7 +243,7 @@ void see(void)
             {   system("cls");
                 test=1;
                 //Each of the following conditions are used to determine the interest by a certain date based on the type of account
-                printf("\nAccount NO.:%15d\nName:%20s \nDOB:%21d/%d/%d \nAge:%20d \nAddress:%44.50s \nCitizenship No:%13s \nPhone number:%19.0lf \nType Of Account:%8s \nAmount deposited($): %10.2f \nDate Of Deposit:%8d/%d/%d\n\n",add.acc_no,add.name,add.dob.month,add.dob.day,add.dob.year,add.age,add.address,add.citizenship,add.phone,
+                printf("\nAccount NO.:%d\nName:%s \nDOB:%d/%d/%d \nAge:%d \nAddress:%s \nCitizenship No:%s \nPhone number:%.0lf \nType Of Account:%s \nAmount deposited($): %.2f \nDate Of Deposit:%d/%d/%d\n\n",add.acc_no,add.name,add.dob.month,add.dob.day,add.dob.year,add.age,add.address,add.citizenship,add.phone,
                 add.acc_type,add.amt,add.deposit.month,add.deposit.day,add.deposit.year);
                 //Fixed Accounts
                 if(strcmpi(add.acc_type,"fixed1")==0)
