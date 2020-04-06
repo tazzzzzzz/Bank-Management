@@ -85,9 +85,9 @@ void view_list()
         scanf("%d",&main_exit);
         system("cls");
         if (main_exit==1)
-            menu();
-        else if(main_exit==0)
             return;
+        else if(main_exit==0)
+            exit(0);
         else
         {
             printf("\nInvalid!\a");
@@ -175,10 +175,10 @@ void edit(void)
               system("cls");
                  if (main_exit==1)
                     //Handles return to main menu
-                    menu();
+                    return;
                 else if (main_exit==2)
                     //Handles exit operation
-                    return;
+                    exit(0);
                 else if(main_exit==0)
                     //Handles retry condition
                     edit();
@@ -191,9 +191,9 @@ void edit(void)
         scanf("%d",&main_exit);
         system("cls");
         if (main_exit==1)
-            menu();
-        else
             return;
+        else
+            exit(0);
         }
 }
 
@@ -362,9 +362,9 @@ void see(void)
               scanf("%d",&main_exit);
               system("cls");
                  if (main_exit==1)
-                    menu();
-                else if (main_exit==2)
                     return;
+                else if (main_exit==2)
+                    exit(0);
                 else if(main_exit==0)
                     see();
                 else
@@ -379,14 +379,14 @@ void see(void)
         if (main_exit==1)
         {
             system("cls");
-            menu();
+            return;
         }
 
         else
            {
 
              system("cls");
-            return;
+            exit(0);
             }
 
 }

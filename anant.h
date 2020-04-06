@@ -1,7 +1,7 @@
 //anant.h
 
-void new_acc();
+void create();
 
 void transact(void);
 
-void erase(void);
+void delete(void);

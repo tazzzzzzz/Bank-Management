@@ -11,17 +11,17 @@
 #define TAB 9
 #define BKSP 8
 
-// static inline float interest(float t, float amount, int rate)
-// {     
-// /*
-//     CERT C:    
-//         PRE31-C. Avoid side effects in arguments to unsafe macros
-//     Secured Programming with C:
-//         PRE00-C. Prefer inline or static functions to function-like macros
+static inline float interest(float t, float amount, int rate)
+{
+    /*
+    CERT C:    
+        PRE31-C. Avoid side effects in arguments to unsafe macros
+    Secured Programming with C:
+        PRE00-C. Prefer inline or static functions to function-like macros
     
-// */
-//     return ((rate * t * amount) / 100.0);
-// }
+*/
+    return ((rate * t * amount) / 100.0);
+}
 
 void fordelay(int j)
 {
@@ -32,14 +32,14 @@ void fordelay(int j)
 
 int valid_date(int dd, int mm, int yy, int day, int month, int year)
 {
-/*
+    /*
     EXP00-A. Use parentheses for precedence of operation
 */
     if (yy < 1900)
         return 0;
-    if ((yy > year) || ((yy == year) && (mm > month)) || ((yy == year) && (mm == month) && (dd > day)))  
+    if ((yy > year) || ((yy == year) && (mm > month)) || ((yy == year) && (mm == month) && (dd > day)))
         return 0;
-/*
+    /*
 EXP33-C. Do not reference uninitialized variables.
 (All possibilities have been thoroughly considered.)
 */
@@ -65,7 +65,6 @@ EXP33-C. Do not reference uninitialized variables.
     {
         if (dd > 31)
             return 0;
-
     }
 
     else
@@ -76,38 +75,125 @@ EXP33-C. Do not reference uninitialized variables.
     return 1;
 }
 
+int Check_Email_Addr(char *EM_Addr)
+{
+    int count = 0;
+    int i = 0;
+    char conv_buf[200];
+    char *c, *domain;
+    char *special_chars = "()<>@,;:\"[]";
 
-int findAge(int current_date, int current_month, int current_year, int birth_date, int birth_month, int birth_year) 
-{ 
-    // days of every month 
-    int month[] = { 31, 28, 31, 30, 31, 30, 31,  
-                          31, 30, 31, 30, 31 }; 
-  
-    // if birth date is greater then current birth 
-    // month then do not count this month and add 30  
-    // to the date so as to subtract the date and 
-    // get the remaining days 
-    if (birth_date > current_date) { 
-        current_date = current_date + month[birth_month - 1]; 
-        current_month = current_month - 1; 
-    } 
-  
-    // if birth month exceeds current month, then do 
-    // not count this year and add 12 to the month so 
-    // that we can subtract and find out the difference 
-    if (birth_month > current_month) { 
-        current_year = current_year - 1; 
-        current_month = current_month + 12; 
-    } 
-  
-    // calculate date, month, year 
-    int calculated_date = current_date - birth_date; 
-    int calculated_month = current_month - birth_month; 
-    int calculated_year = current_year - birth_year; 
-  
-    // return the present age 
+    /* The input is in EBCDIC so convert to ASCII first */
+    strcpy(conv_buf, EM_Addr);
+    EtoA(conv_buf);
+    /* convert the special chars to ASCII */
+    EtoA(special_chars);
+
+    for (c = conv_buf; *c; c++)
+    {
+        /* if '"' and beginning or previous is a '.' or '"' */
+        if (*c == 34 && (c == conv_buf || *(c - 1) == 46 || *(c - 1) == 34))
+        {
+            while (*++c)
+            {
+                /* if '"' break, End of name */
+                if (*c == 34)
+                    break;
+                /* if '' and ' ' */
+                if (*c == 92 && (*++c == 32))
+                    continue;
+                /* if not between ' ' & '~' */
+                if (*c <= 32 || *c > 127)
+                    return 0;
+            }
+            /* if no more characters error */
+            if (!*c++)
+                return 0;
+            /* found '@' */
+            if (*c == 64)
+                break;
+            /* '.' required */
+            if (*c != 46)
+                return 0;
+            continue;
+        }
+        if (*c == 64)
+        {
+            break;
+        }
+        /* make sure between ' ' && '~' */
+        if (*c <= 32 || *c > 127)
+        {
+            return 0;
+        }
+        /* check special chars */
+        if (strchr(special_chars, *c))
+        {
+            return 0;
+        }
+    } /* end of for loop */
+    /* found '@' */
+    /* if at beginning or previous = '.' */
+    if (c == conv_buf || *(c - 1) == 46)
+        return 0;
+    /* next we validate the domain portion */
+    /* if the next character is NULL */
+    /* need domain ! */
+    if (!*(domain = ++c))
+        return 0;
+    do
+    {
+        /* if '.' */
+        if (*c == 46)
+        {
+            /* if beginning or previous = '.' */
+            if (c == domain || *(c - 1) == 46)
+                return 0;
+            /* count '.' need at least 1 */
+            count++;
+        }
+        /* make sure between ' ' and '~' */
+        if (*c <= 32 || *c >= 127)
+            return 0;
+        if (strchr(special_chars, *c))
+            return 0;
+    } while (*++c);      /* while valid char */
+    return (count >= 1); /* return true if more than 1 '.' */
+}
+
+int findAge(int current_date, int current_month, int current_year, int birth_date, int birth_month, int birth_year)
+{
+    // days of every month
+    int month[] = {31, 28, 31, 30, 31, 30, 31,
+                   31, 30, 31, 30, 31};
+
+    // if birth date is greater then current birth
+    // month then do not count this month and add 30
+    // to the date so as to subtract the date and
+    // get the remaining days
+    if (birth_date > current_date)
+    {
+        current_date = current_date + month[birth_month - 1];
+        current_month = current_month - 1;
+    }
+
+    // if birth month exceeds current month, then do
+    // not count this year and add 12 to the month so
+    // that we can subtract and find out the difference
+    if (birth_month > current_month)
+    {
+        current_year = current_year - 1;
+        current_month = current_month + 12;
+    }
+
+    // calculate date, month, year
+    int calculated_date = current_date - birth_date;
+    int calculated_month = current_month - birth_month;
+    int calculated_year = current_year - birth_year;
+
+    // return the present age
     return calculated_year;
-} 
+}
 
 void menu(void)
 {
@@ -124,7 +210,7 @@ menu:
     switch (choice)
     {
     case 1:
-        new_acc();
+        create();
         goto menu;
         break;
     case 2:
@@ -140,7 +226,7 @@ menu:
         goto menu;
         break;
     case 5:
-        erase();
+        delete ();
         goto menu;
         break;
     case 6:
@@ -160,7 +246,7 @@ void start()
 
     int p = 0;
     char ch;
-
+login_attempt:
     printf("Enter your password. Hit ENTER to confirm.\n");
     printf("Password:");
 
@@ -184,8 +270,8 @@ void start()
         else
         {
             pwd[p] = ch;
-            p+=1;
-/*            
+            p += 1;
+            /*            
 EXP30-C. Do not depend on order of evaluation between sequence points
 */
             printf("* \b"); //to replace password character with *
@@ -213,13 +299,13 @@ EXP30-C. Do not depend on order of evaluation between sequence points
         {
 
             system("cls");
-            start();
+            goto login_attempt;
         }
 
         else if (main_exit == 0)
         {
             system("cls");
-            return;
+            exit(0);
         }
         else
         {
