@@ -4,9 +4,6 @@
 #include<math.h>
 #include<errno.h>
 #include "data.h"
-
-#define FORMAT "%d %s %d/%d/%d %d %s %s %lf %s %f %d/%d/%d",&add.acc_no,add.name,&add.dob.month,&add.dob.day,&add.dob.year,&add.age,add.address,add.citizenship,&add.phone,add.acc_type,&add.amt,&add.deposit.month,&add.deposit.day,&add.deposit.year
-
 extern int errno;
 /*
 *obvious* RECOMMENDATIONS   //Removed in final commit
@@ -25,7 +22,17 @@ DCL32-C. Guarantee identifiers are unique
 
 //Variable 'test' has been used throughout as a flag variable to keep track of success or failure of operations
 //Note that the 'test' variable is uniquely defined for each function and operates independently
-
+static inline float interest(float t, float amount, int rate)
+{     
+/*
+    CERT C:    
+        PRE31-C. Avoid side effects in arguments to unsafe macros
+    Secured Programming with C:
+        PRE00-C. Prefer inline or static functions to function-like macros
+    
+*/
+    return ((rate * t * amount) / 100.0);
+}
 void view_list()
 {
     /*
@@ -60,7 +67,7 @@ void view_list()
     printf("\nACC. NO.\tNAME\t\t\tADDRESS\t\t\t\t\tPHONE\n");
     printf("________________________________________________________________________________________________________________________");
 
-    while(fscanf(view,FORMAT)!=EOF)
+    while(fscanf(view,FORMAT, &add.acc_no,add.name,&add.dob.month,&add.dob.day,&add.dob.year,&add.age,add.address,add.citizenship,&add.phone,add.acc_type,&add.amt,&add.deposit.month,&add.deposit.day,&add.deposit.year)!=EOF)
        {
            
            printf("\n%6d\t %10s\t\t\t%10.25s...\t\t%.0lf",add.acc_no,add.name,add.address,add.phone);
@@ -123,7 +130,7 @@ void edit(void)
     
     printf("\nEnter the account no. of the customer whose info you want to change:");
     scanf("%d",&upd.acc_no);
-    while(fscanf(old,FORMAT)!=EOF)
+    while(fscanf(old,FORMAT, &add.acc_no,add.name,&add.dob.month,&add.dob.day,&add.dob.year,&add.age,add.address,add.citizenship,&add.phone,add.acc_type,&add.amt,&add.deposit.month,&add.deposit.day,&add.deposit.year)!=EOF)
     {
         if (add.acc_no==upd.acc_no)
         {   test=1;
@@ -134,7 +141,7 @@ void edit(void)
                 //Updates Address Value
                 {printf("Enter the new address:");
                 scanf("%s",upd.address);
-                fprintf(newrec,"%d %s %d/%d/%d %d %s %s %lf %s %f %d/%d/%d\n",add.acc_no,add.name,add.dob.month,add.dob.day,add.dob.year,add.age,upd.address,add.citizenship,add.phone,add.acc_type,add.amt,add.deposit.month,add.deposit.day,add.deposit.year);
+                fprintf(newrec,FORMAT,add.acc_no,add.name,add.dob.month,add.dob.day,add.dob.year,add.age,upd.address,add.citizenship,add.phone,add.acc_type,add.amt,add.deposit.month,add.deposit.day,add.deposit.year);
                 system("cls");
                 printf("Changes saved!");
                 }
@@ -143,14 +150,14 @@ void edit(void)
                     //Updates Phone No. Value
                     printf("Enter the new phone number:");
                 scanf("%lf",&upd.phone);
-                fprintf(newrec,"%d %s %d/%d/%d %d %s %s %lf %s %f %d/%d/%d\n",add.acc_no,add.name,add.dob.month,add.dob.day,add.dob.year,add.age,add.address,add.citizenship,upd.phone,add.acc_type,add.amt,add.deposit.month,add.deposit.day,add.deposit.year);
+                fprintf(newrec,FORMAT,add.acc_no,add.name,add.dob.month,add.dob.day,add.dob.year,add.age,add.address,add.citizenship,upd.phone,add.acc_type,add.amt,add.deposit.month,add.deposit.day,add.deposit.year);
                 system("cls");
                 printf("Changes saved!");
                 }
 
         }
         else
-            fprintf(newrec,"%d %s %d/%d/%d %d %s %s %lf %s %f %d/%d/%d\n",add.acc_no,add.name,add.dob.month,add.dob.day,add.dob.year,add.age,add.address,add.citizenship,add.phone,add.acc_type,add.amt,add.deposit.month,add.deposit.day,add.deposit.year);
+            fprintf(newrec,FORMAT,add.acc_no,add.name,add.dob.month,add.dob.day,add.dob.year,add.age,add.address,add.citizenship,add.phone,add.acc_type,add.amt,add.deposit.month,add.deposit.day,add.deposit.year);
     }
     fclose(old);
     fclose(newrec);
@@ -237,7 +244,7 @@ void see(void)
     {   printf("Enter the account number:");
         scanf("%d",&check.acc_no);
 
-        while (fscanf(ptr,FORMAT)!=EOF)
+        while (fscanf(ptr,FORMAT, &add.acc_no,add.name,&add.dob.month,&add.dob.day,&add.dob.year,&add.age,add.address,add.citizenship,&add.phone,add.acc_type,&add.amt,&add.deposit.month,&add.deposit.day,&add.deposit.year)!=EOF)
         {
             if(add.acc_no==check.acc_no)
             {   system("cls");
@@ -293,7 +300,7 @@ void see(void)
     else if (choice==2)
     {   printf("Enter the name:");
         scanf("%s",&check.name);
-        while (fscanf(ptr,FORMAT)!=EOF)
+        while (fscanf(ptr,FORMAT, &add.acc_no,add.name,&add.dob.month,&add.dob.day,&add.dob.year,&add.age,add.address,add.citizenship,&add.phone,add.acc_type,&add.amt,&add.deposit.month,&add.deposit.day,&add.deposit.year)!=EOF)
         {
             if(strcmpi(add.name,check.name)==0)
             {   system("cls");

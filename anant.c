@@ -4,18 +4,19 @@
 #include <math.h>
 #include "data.h"
 
+
 void new_acc()
 {
     int choice;
+    //int test = 0;
     FILE *ptr;
 
     ptr = fopen("record.txt", "a+");
-    
 
 account_no:
     system("cls");
     printf("\t\t\t ADD RECORD  ");
-    
+  
     //Get Time.
     SYSTEMTIME t; 
     GetLocalTime(&t);
@@ -23,54 +24,51 @@ account_no:
     add.deposit.day = t.wDay; 
     add.deposit.month = t.wMonth;
     add.deposit.year = t.wYear;
-    
 
-    //Validate Account Number Entered.
     printf("\nEnter the account number:");
     scanf("%d", &check.acc_no);
-    while (fscanf(ptr, FORMAT, &add.acc_no, add.name, &add.dob.day, &add.dob.month, &add.dob.year, &add.age, add.address, add.citizenship, &add.phone, add.acc_type, &add.amt, &add.deposit.day, &add.deposit.month, &add.deposit.year) != EOF)
+    while (fscanf(ptr, FORMAT, &add.acc_no, add.name, &add.dob.month, &add.dob.day, &add.dob.year, &add.age, add.address, add.citizenship, &add.phone, add.acc_type, &add.amt, &add.deposit.month, &add.deposit.day, &add.deposit.year) != EOF)
     {
+  //      printf("\n%d", test++);
         if (check.acc_no == add.acc_no)
         {
-            printf("Account no. already in use. Try again with a different account number.");
-            fseek ( ptr , 0 , SEEK_SET );
+            printf("Account no. already in use!");
+            fseek(ptr, 0, SEEK_SET);
+
             fordelay(1000000000);
             goto account_no;
         }
     }
-
     add.acc_no = check.acc_no;
 
     printf("\nEnter the name:");
     scanf("%s", add.name);
 
-validate_dob:
+    validate_dob:
     printf("\nEnter the date of birth (DD/MM/YYYY):");
     scanf("%d/%d/%d", &add.dob.day, &add.dob.month, &add.dob.year);
     if( !(valid_date(add.dob.day,add.dob.month,add.dob.year,add.deposit.day,add.deposit.month,add.deposit.year))){
-        fseek ( ptr , 0 , SEEK_SET );
         fordelay(1000000000);
         goto validate_dob;
     }
-        
-    /* if(add.dob.year){
-        CODE FOR CALCULATING AGE
-     }*/
+    add.age = findAge(t.wDay, t.wMonth, t.wYear,add.dob.day,add.dob.month,add.dob.year);
 
-    printf("\nEnter the Address:");
+    printf("\nEnter the address:");
     scanf("%s", add.address);
 
+    
 citizenship_validation:
     printf("\nEnter the citizenship number:");
-    scanf("%s", check.citizenship);
-    printf("\nFTELL:%d",ftell(ptr));
+    scanf("%s", add.citizenship);
+//    printf("\nFTELL:%d",ftell(ptr));
     fseek (ptr , 0 , SEEK_SET );
-    printf("\nFTELL:%d",ftell(ptr));
-    printf("\n%s",check.citizenship);
-    while (fscanf(ptr, FORMAT, &add.acc_no, add.name, &add.dob.day, &add.dob.month, &add.dob.year, &add.age, add.address, add.citizenship, &add.phone, add.acc_type, &add.amt, &add.deposit.day, &add.deposit.month, &add.deposit.year) != EOF)
+ //   printf("\nFTELL:%d",ftell(ptr));
+//    printf("\n%s",add.citizenship);
+    while (fscanf(ptr, FORMAT, &check.acc_no, check.name, &check.dob.day, &check.dob.month, &check.dob.year, &check.age, check.address, check.citizenship, &check.phone, check.acc_type, &check.amt, &check.deposit.day, &check.deposit.month, &check.deposit.year)!=EOF)
     {
         if (!strcmp(check.citizenship,add.citizenship))
         {
+            printf("\n%d %d %d  FTELL:%d",test++, check.acc_no, add.acc_no,ftell(ptr));
             if(strcmp(check.name,add.name)){
                 printf("Uh Oh! Try again with proper credentials.");   
                 fordelay(1000000000);
@@ -79,21 +77,15 @@ citizenship_validation:
             }
         }
     }
-
-    strcpy(add.citizenship,check.citizenship);
     printf("\nEnter the phone number: ");
     scanf("%lf", &add.phone);
-
-amount_to_deposit:
-    printf("\nEnter the amount to deposit: $");
+    printf("\nEnter the amount to deposit:$");
     scanf("%f", &add.amt);
     if(add.amt<=10)
     {
         printf("You need to deposit a minimum of $10.");
         goto amount_to_deposit;
     }
-      
-      
 
     printf("\nType of account: ");
     printf("\n\t-> Saving\n\t-> Current\n");
@@ -101,25 +93,24 @@ amount_to_deposit:
     printf("\n\n\tEnter your choice:");
     scanf("%s", add.acc_type);
 
-    fprintf(ptr, FORMAT, add.acc_no, add.name, add.dob.day, add.dob.month, add.dob.year, add.age, add.address, add.citizenship, add.phone, add.acc_type, add.amt, add.deposit.month, add.deposit.day, add.deposit.year);
+    fprintf(ptr, FORMAT, add.acc_no, add.name, add.dob.month, add.dob.day, add.dob.year, add.age, add.address, add.citizenship, add.phone, add.acc_type, add.amt, add.deposit.month, add.deposit.day, add.deposit.year);
+
     fclose(ptr);
     printf("\nAccount created successfully!");
-
 add_invalid:
-    printf("\n\n\n\t\tEnter 1 to go to the main menu and 0 to exit: ");
+    printf("\n\n\n\t\tEnter 1 to go to the main menu and 0 to exit:");
     scanf("%d", &main_exit);
     system("cls");
     if (main_exit == 1)
-        menu();
-    else if (main_exit == 0)
         return;
+    else if (main_exit == 0)
+        exit(0);
     else
     {
-        printf("\nInvalid Input. Please Enter a 0 or a 1.\a");
+        printf("\nInvalid!\a");
         goto add_invalid;
     }
 }
-
 void transact(void)
 {
     int choice, test = 0;
