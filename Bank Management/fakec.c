@@ -8,7 +8,7 @@
 #include "inputValidation.h"
 #include "majorfunction.h"
 #include "utilFunctions.h"
-
+#include<ctype.h>
 //anant.h
 //File so that unit testing of each function works.
 void create(){
@@ -19,7 +19,7 @@ void create(){
 
     ptr = fopen("record.txt", "a+");
 
-    FLUSH
+
     system("cls");
     printf("\t\t\t ADD RECORD  ");
     //Get Time.
@@ -35,9 +35,9 @@ account_no:
     printf("\nPlease enter the Account Number:");
     FLUSH
     check.acc_no = getLong();
-    while (fscanf(ptr, FORMAT, SCANFILE(add)) != EOF)
+    while (fscanf(ptr, FORMAT, &add.acc_no, add.name, &add.dob.day, &add.dob.month, &add.dob.year, &add.age, add.address, add.citizenship, &add.phone, add.acc_type, &add.amt, &add.deposit.day, &add.deposit.month, &add.deposit.year) != EOF)
     {
-        printf(FORMAT,PRINTFILE(add));
+        // printf(FORMAT,add.acc_no, add.name, add.dob.day, add.dob.month, add.dob.year, add.age, add.address, add.citizenship, add.phone, add.acc_type, add.amt, add.deposit.day, add.deposit.month, add.deposit.year);
         if (check.acc_no == add.acc_no)
         {
             printf("Account no. already in use!");
@@ -49,11 +49,12 @@ account_no:
     }
 
     add.acc_no = check.acc_no;
+    FLUSH
 
     printf("\nEnter the name:");
     scanf("%[^\n]s", add.name);
     removeSpaces(add.name);
-    // printf("%s",add.name);
+    printf("%s",add.name);
     FLUSH
 
 validate_dob:
@@ -62,12 +63,13 @@ validate_dob:
 
     while ((scanf("%d/%d/%d",&add.dob.day,&add.dob.month,&add.dob.year) != 3)) 
     {
+        printf(("WRONG"));
         printf("\nThe above date of birth is invalid.\nEnter a valid date of birth(mm/dd/yyyy):");
         do { c = getchar(); } while (c != '\n' && c != EOF);  /* flush input buffer */
     }
     FLUSH
 
-    if( !(validDate(add.dob.day,add.dob.month,add.dob.year,add.deposit.day,add.deposit.month,add.deposit.year))){
+    if( !(valid_date(add.dob.day,add.dob.month,add.dob.year,add.deposit.day,add.deposit.month,add.deposit.year))){
         printf("Kindly enter a valid date");
         fordelay(1000000000);
         goto validate_dob;
@@ -89,10 +91,8 @@ citizenship_validation:
     scanf("%[^\n]s", add.citizenship);
     removeSpaces(add.citizenship);
     fseek (ptr , 0 , SEEK_SET );
-    while (fscanf(ptr, FORMAT, SCANFILE(check))!=EOF)
+    while (fscanf(ptr, FORMAT, &check.acc_no, check.name, &check.dob.day, &check.dob.month, &check.dob.year, &check.age, check.address, check.citizenship, &check.phone, check.acc_type, &check.amt, &check.deposit.day, &check.deposit.month, &check.deposit.year)!=EOF)
     {
-        printf(FORMAT,PRINTFILE(check));
-
         if (!strcmp(check.citizenship,add.citizenship))
         {
             if(strcmp(check.name,add.name) || (check.dob.day!=add.dob.day) || (check.dob.month!=add.dob.month) || (check.dob.year!=add.dob.year))
@@ -110,12 +110,7 @@ citizenship_validation:
 phone:
     printf("\nEnter the phone number: ");
     FLUSH
-    add.phone = phoneNumber();
-    if(add.phone == -1){
-        goto phone;
-        FLUSH
-    }
-    
+    add.phone = getLong();
     
 
 amount_to_deposit:
@@ -139,28 +134,21 @@ account_type:
     removeSpaces(add.acc_type);
     FLUSH
 
-    fprintf(ptr, FORMAT, PRINTFILE(add));
+    fprintf(ptr, FORMAT, add.acc_no, add.name, add.dob.day, add.dob.month, add.dob.year, add.age, add.address, add.citizenship, add.phone, add.acc_type, add.amt, add.deposit.day, add.deposit.month, add.deposit.year);
 
     fclose(ptr);
     printf("\nAccount created successfully!");
 add_invalid:
     printf("\n\n\n\t\tEnter 1 to go to the main menu and 0 to exit:");
-    main_exit = getInt();
+    scanf("%d", &main_exit);
+    system("cls");
     if (main_exit == 1)
-    {
-        system("cls");
         return;
-    }
-    else if (main_exit == 0){
-        system("cls");
+    else if (main_exit == 0)
         exit(0);
-    
-    }
-    
     else
     {
         printf("\nInvalid!\a");
-        system("cls");
         goto add_invalid;
     }
 }
