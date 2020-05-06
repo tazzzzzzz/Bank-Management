@@ -16,9 +16,7 @@ void create(void){
 
     int choice;
     //int test = 0;
-    FILE *ptr;
-
-    ptr = fopen("record.txt", "a+");
+    FILE *restrict const ptr = fopen("record.txt", "a+");
 
     FLUSH
     system("cls");
@@ -169,9 +167,9 @@ add_invalid:
 void transact(void){
 
     int choice, test = 0;
-    FILE *old, *newrec;
-    old = fopen("record.txt", "r");
-    newrec = fopen("new.txt", "w");
+    
+    FILE *restrict const old = fopen("record.txt", "r") ;
+    FILE *restrict const newrec =  fopen("new.txt", "w");
 
     printf("\nEnter the account no. of the customer:");
     FLUSH
@@ -261,11 +259,11 @@ void transact(void){
 
 void closeAccount(void)
 {
-    FILE *old, *newrec;
+    FILE *restrict const old = fopen("record.txt", "r") ;
+    FILE *restrict const newrec =  fopen("new.txt", "w");
     int test = 0;
     long rem;
-    old = fopen("record.txt", "r");
-    newrec = fopen("new.txt", "w");
+
     printf("\nEnter the account no. of the customer you want to delete:");
     FLUSH
     rem = getLong();
@@ -513,8 +511,115 @@ void view_list()
 
 
 void edit(void){
-return;
+    /*
+    RECOMMENDATIONS/RULES
+    DCL05-A. Use typedefs to improve code readability
+    */
+    typedef int flag;
+    typedef int option;
+    //Update Values in pre-existing Records
+    option choice;
+    flag test=0;
+    /*
+    RECOMMENDATIONS/RULES
+    DCL00-A. Declare immutable values using const or enum
+    DCL03-A: Place const as the rightmost declaration specifier
+    DCL33-C. Ensure that source and destination pointers in function arguments do not point to overlapping objects if they are restrict qualified
+    */
+    FILE *restrict const old=fopen("record.txt","r");    
+    /*
+    RECOMMENDATIONS/RULES
+    DCL09-A. Declare functions that return an errno with a return type of errno_t
+    */
+    int errnum;
+    if(old == NULL){
+        errnum = errno;
+        fprintf(stderr, "ERROR CODE: %d\n", errno);
+        perror("Error printed by perror");
+        fprintf(stderr, "Error opening file: %s\n", strerror( errnum ));
+        exit(0);
+    }   
+    FILE *restrict const newrec=fopen("new.txt","w");
+    
+    printf("\nEnter the account no. of the customer whose info you want to change:");
+    FLUSH
+    upd.acc_no = getLong();
+    while(fscanf(old,FORMAT, SCANFILE(add))!=EOF)
+    {
+        if (add.acc_no==upd.acc_no)
+        {   
+            test=1;
+            printf("\nWhich information do you want to change?\n1.Address\n2.Phone\n\nEnter your choice(1 for address and 2 for phone):");
+            FLUSH
+            choice = getInt();
+            system("cls");
+            if(choice==1)
+                //Updates Address Value
+                {printf("Enter the new address:");
+                FLUSH
+                scanf("%s",upd.address);
+                fprintf(newrec,FORMAT,add.acc_no,add.name,add.dob.month,add.dob.day,add.dob.year,add.age,upd.address,add.citizenship,add.phone,add.acc_type,add.amt,add.deposit.month,add.deposit.day,add.deposit.year);
+                system("cls");
+                printf("Changes saved!");
+                }
+            else if(choice==2)
+                {
+                    //Updates Phone No. Value
+                    printf("Enter the new phone number:");
+                    updatePhone:
+                        upd.phone = phoneNumber();
+                        if(upd.phone == -1){
+                            goto updatePhone;
+                            FLUSH
+                        }
+                fprintf(newrec,FORMAT,add.acc_no,add.name,add.dob.month,add.dob.day,add.dob.year,add.age,add.address,add.citizenship,upd.phone,add.acc_type,add.amt,add.deposit.month,add.deposit.day,add.deposit.year);
+                system("cls");
+                printf("Changes saved!");
+                }
+
+        }
+        else
+            fprintf(newrec,FORMAT,add.acc_no,add.name,add.dob.month,add.dob.day,add.dob.year,add.age,add.address,add.citizenship,add.phone,add.acc_type,add.amt,add.deposit.month,add.deposit.day,add.deposit.year);
+    }
+    fclose(old);
+    fclose(newrec);
+    remove("record.txt");
+    rename("new.txt","record.txt");
+
+    if(test!=1)
+    {   
+        //In case of invalid search
+        system("cls");
+            printf("\nRecord not found!!\a\a\a");
+            edit_invalid:
+              printf("\nEnter 0 to try again,1 to return to main menu and 2 to exit:");
+              scanf("%d",&main_exit);
+              system("cls");
+                 if (main_exit==1)
+                    //Handles return to main menu
+                    return;
+                else if (main_exit==2)
+                    //Handles exit operation
+                    exit(0);
+                else if(main_exit==0)
+                    //Handles retry condition
+                    edit();
+                else
+                    {printf("\nInvalid!\a");
+                    goto edit_invalid;}
+        }
+    else
+        {printf("\n\n\nEnter 1 to go to the main menu and 0 to exit:");
+        scanf("%d",&main_exit);
+        system("cls");
+        if (main_exit==1)
+            return;
+        else
+            exit(0);
+        }
 }
+
+
 
 void see(void){
 
