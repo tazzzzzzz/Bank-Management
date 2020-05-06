@@ -206,7 +206,7 @@ void transact(void){
             {
                 FLUSH
                 printf("\nEnter the amount you want to withdraw: $");
-                transactionAmt = getFloat();
+                float transactionAmt = getFloat();
                 if(add.amt-10<transactionAmt)
                 {
                     printf("\n\nTransaction declined. \nInsufficient Funds in account.");
