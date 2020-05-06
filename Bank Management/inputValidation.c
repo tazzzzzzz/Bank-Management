@@ -10,7 +10,13 @@ int getInt(){
     int num = 0, ch;
     do{
         ch = getch();
-        if(ch>=48&&ch<=57){
+        if (ch == 127 || ch == 8){
+            // printf("\b");
+            printf("\b \b");
+            num=num/10;
+            continue;
+        }
+        else if(ch>=48&&ch<=57){
             printf("%c",ch);
             num=num*10+(ch-48);
         }
@@ -20,7 +26,6 @@ int getInt(){
     }while(1);
     return num;
 }
-
 long getLong(){
     char *p, s[100];
     long n;
@@ -55,6 +60,28 @@ float getFloat(){
         goto getFloatValue;
 }
 
+long phoneNumber()
+{
+	char s[11];
+	int cnt=0;
+ 	while(cnt<10) //atmost 8 digits
+ 	{
+ 		s[cnt]=getchar();
+ 		if(!isdigit(s[cnt]))//break if non digit entered
+ 		{
+ 			s[cnt]='\0';//end string with a null.
+ 			break;
+ 		}
+ 		cnt++;
+	}
+    if(cnt!=10){
+        printf("Enter a valid phone number. \n");
+        return;
+    }
+	s[cnt]='\0';
+	return atoi(s);
+}
+
 void removeSpaces(char *str) 
 { 
     int count = 0; 
@@ -71,7 +98,7 @@ void removeSpaces(char *str)
     EXP33-C. Do not reference uninitialized variables.
     (All possibilities have been thoroughly considered.)
 */
-int valid_date(int dd, int mm, int yy, int day, int month, int year)
+int validDate(int dd, int mm, int yy, int day, int month, int year)
 {
     
     if (yy < 1900)

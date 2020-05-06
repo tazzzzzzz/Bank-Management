@@ -8,6 +8,7 @@
 #include "inputValidation.h"
 #include "majorfunction.h"
 #include "utilFunctions.h"
+
 //anant.h
 //File so that unit testing of each function works.
 void create(){
@@ -18,7 +19,7 @@ void create(){
 
     ptr = fopen("record.txt", "a+");
 
-
+    FLUSH
     system("cls");
     printf("\t\t\t ADD RECORD  ");
     //Get Time.
@@ -34,9 +35,9 @@ account_no:
     printf("\nPlease enter the Account Number:");
     FLUSH
     check.acc_no = getLong();
-    while (fscanf(ptr, FORMAT, &add.acc_no, add.name, &add.dob.day, &add.dob.month, &add.dob.year, &add.age, add.address, add.citizenship, &add.phone, add.acc_type, &add.amt, &add.deposit.day, &add.deposit.month, &add.deposit.year) != EOF)
+    while (fscanf(ptr, FORMAT, SCANFILE(add)) != EOF)
     {
-        // printf(FORMAT,add.acc_no, add.name, add.dob.day, add.dob.month, add.dob.year, add.age, add.address, add.citizenship, add.phone, add.acc_type, add.amt, add.deposit.day, add.deposit.month, add.deposit.year);
+        printf(FORMAT,PRINTFILE(add));
         if (check.acc_no == add.acc_no)
         {
             printf("Account no. already in use!");
@@ -48,12 +49,11 @@ account_no:
     }
 
     add.acc_no = check.acc_no;
-    FLUSH
 
     printf("\nEnter the name:");
     scanf("%[^\n]s", add.name);
     removeSpaces(add.name);
-    printf("%s",add.name);
+    // printf("%s",add.name);
     FLUSH
 
 validate_dob:
@@ -68,7 +68,7 @@ validate_dob:
     }
     FLUSH
 
-    if( !(valid_date(add.dob.day,add.dob.month,add.dob.year,add.deposit.day,add.deposit.month,add.deposit.year))){
+    if( !(validDate(add.dob.day,add.dob.month,add.dob.year,add.deposit.day,add.deposit.month,add.deposit.year))){
         printf("Kindly enter a valid date");
         fordelay(1000000000);
         goto validate_dob;
@@ -90,8 +90,10 @@ citizenship_validation:
     scanf("%[^\n]s", add.citizenship);
     removeSpaces(add.citizenship);
     fseek (ptr , 0 , SEEK_SET );
-    while (fscanf(ptr, FORMAT, &check.acc_no, check.name, &check.dob.day, &check.dob.month, &check.dob.year, &check.age, check.address, check.citizenship, &check.phone, check.acc_type, &check.amt, &check.deposit.day, &check.deposit.month, &check.deposit.year)!=EOF)
+    while (fscanf(ptr, FORMAT, SCANFILE(check))!=EOF)
     {
+        printf(FORMAT,PRINTFILE(check));
+
         if (!strcmp(check.citizenship,add.citizenship))
         {
             if(strcmp(check.name,add.name) || (check.dob.day!=add.dob.day) || (check.dob.month!=add.dob.month) || (check.dob.year!=add.dob.year))
@@ -109,7 +111,12 @@ citizenship_validation:
 phone:
     printf("\nEnter the phone number: ");
     FLUSH
-    add.phone = getLong();
+    add.phone = phoneNumber();
+    if(add.phone == -1){
+        goto phone;
+        FLUSH
+    }
+    
     
 
 amount_to_deposit:
@@ -133,21 +140,28 @@ account_type:
     removeSpaces(add.acc_type);
     FLUSH
 
-    fprintf(ptr, FORMAT, add.acc_no, add.name, add.dob.day, add.dob.month, add.dob.year, add.age, add.address, add.citizenship, add.phone, add.acc_type, add.amt, add.deposit.day, add.deposit.month, add.deposit.year);
+    fprintf(ptr, FORMAT, PRINTFILE(add));
 
     fclose(ptr);
     printf("\nAccount created successfully!");
 add_invalid:
     printf("\n\n\n\t\tEnter 1 to go to the main menu and 0 to exit:");
-    scanf("%d", &main_exit);
-    system("cls");
+    main_exit = getInt();
     if (main_exit == 1)
+    {
+        system("cls");
         return;
-    else if (main_exit == 0)
+    }
+    else if (main_exit == 0){
+        system("cls");
         exit(0);
+    
+    }
+    
     else
     {
         printf("\nInvalid!\a");
+        system("cls");
         goto add_invalid;
     }
 }
@@ -156,9 +170,69 @@ void transact(void){
 return;
 }
 
-void closeAccount(void){
-return;
+void closeAccount(void)
+{
+    FILE *old, *newrec;
+    int test = 0;
+    long rem;
+    old = fopen("record.txt", "r");
+    newrec = fopen("new.txt", "w");
+    printf("\nEnter the account no. of the customer you want to delete:");
+    rem = getLong();
+    FLUSH
+    // printf("%ld is going to be deleted. ",rem);
+    while (fscanf(old, FORMAT, SCANFILE(add)) != EOF)
+    {
+        if (add.acc_no != rem){
+            // printf(FORMAT, PRINTFILE(add));
+            fprintf(newrec, FORMAT, PRINTFILE(add));
+        }
+
+        else
+        {
+            test++;
+            printf("\nRecord deleted successfully!\n");
+        }
+    }
+
+    fclose(old);
+    fclose(newrec);
+
+    remove("record.txt");
+    rename("new.txt", "record.txt");
+    if (test == 0)
+    {
+        printf("\nRecord not found!\a\a\a");
+    
+    delete_invalid:
+        printf("\nEnter 0 to try deleting another record, 1 to return to main menu, 2 to exit. ");
+        main_exit = getInt();
+
+        if (main_exit == 1)
+            return;
+        else if (main_exit == 2)
+            exit(0);
+        else if (main_exit == 0)
+            closeAccount();
+        else
+        {
+            printf("\nInvalid!\a");
+            goto delete_invalid;
+        }
+    }
+    
+    else
+    {
+        printf("\nEnter 1 to go to the main menu and 0 to exit. ");
+        main_exit = getInt();
+        system("cls");
+        if (main_exit == 1)
+            return;
+        else
+            exit(0);
+    }
 }
+
 
 //arjun.h
 void view_list(){

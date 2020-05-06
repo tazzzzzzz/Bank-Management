@@ -2,6 +2,8 @@ int i,j;
 int main_exit;
 #define FORMAT "\n%ld %s %d/%d/%d %d %s %s %ld %s %f %d/%d/%d\n"
 #define FLUSH fflush(stdin);
+#define PRINTFILE(x) (x).acc_no, (x).name, (x).dob.day, (x).dob.month, (x).dob.year, (x).age, (x).address, (x).citizenship, (x).phone, (x).acc_type, (x).amt, (x).deposit.day, (x).deposit.month, (x).deposit.year
+#define SCANFILE(x)  &(x).acc_no, (x).name, &(x).dob.day, &(x).dob.month, &(x).dob.year, &(x).age, (x).address, (x).citizenship, &(x).phone, (x).acc_type, &(x).amt, &((x)).deposit.day, &(x).deposit.month, &(x).deposit.year
 
 struct date{
     int month,day,year;
@@ -22,4 +24,4 @@ typedef struct account{
     struct date withdraw;
 
 }account;
-account add,upd,check,rem,transaction;
+account add,upd,check,transaction;
