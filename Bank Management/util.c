@@ -11,11 +11,9 @@
 #include "data.h"
 #include "majorfunction.h"
 #include "utilFunctions.h"
-#include "inputValidation.h"
+#include<ctype.h>
 
-
-
-static inline float interest(float t, float amount, int rate)
+float interest(float t, float amount, int rate)
 {
     
     // CERT C:    
@@ -78,7 +76,7 @@ void menu(void)
     //system("color 99");
     printf("\n\n\t\t\tCUSTOMER ACCOUNT BANKING MANAGEMENT SYSTEM");
     printf("\n\n\n\t\t\t WELCOME TO THE MAIN MENU ");
-    printf("\n\n\t\t1.Create new account\n\t\t2.Update information of existing account\n\t\t3.For transactions\n\t\t4.Check the details of existing account\n\t\t5.Removing existing account\n\t\t6.View customer's list\n\t\t7.Exit\n\n\n\n\n\t\t Enter your choice:");
+    printf("\n\n\t\t1.Create new account\n\t\t2.Update information of existing account\n\t\t3.For transactions\n\t\t4.Check the details of existing account\n\t\t5.Removing existing account\n\t\t6.View customer's list\n\t\t7.Loan Application\n\t\t8.Exit\n\n\n\n\n\t\t Enter your choice:");
     scanf("%d", &choice);
 
     system("cls");
@@ -109,23 +107,32 @@ void menu(void)
         goto menu;
         break;
     case 7:
+        loan();
+        goto menu;
+        break;
+    case 8:
+        return;
         break;
     }
 }
 
-int passwordAuthentication()
+
+// EXP30-C. Do not depend on order of evaluation between sequence points
+void start()
 {
-    char pwd[10];int i = 0;
+    char pwd[10], password[10] = "root";
+    int i = 0;
 
     int p = 0;
     char ch;
-    
+    login_attempt:
     printf("Enter your password. Hit ENTER to confirm.\n");
     printf("Password:");
 
     while (1)
     {
         ch = getch(); //get key
+
         if (ch == ENTER || ch == TAB)
         {
             pwd[p] = '\0';
@@ -142,28 +149,14 @@ int passwordAuthentication()
         else
         {
             pwd[p] = ch;
-            p += 1;  
+            p += 1;
+  
             printf("* \b"); //to replace password character with *
         }
     }
+
     if (strcmp(pwd, password) == 0)
     {
-        // printf("\n\nPassword Match!\nLOADING");
-        return 1;        
-    }
-    else
-    {
-        printf("\n\nPassword Incorrect.");
-        return 0;
-    }
-}
-
-
-// EXP30-C. Do not depend on order of evaluation between sequence points
-void start()
-{
-login_attempt:
-    if(passwordAuthentication()){
         printf("\n\nPassword Match!\nLOADING");
         for (i = 0; i <= 6; i++)
         {
@@ -173,19 +166,17 @@ login_attempt:
         system("cls");
         printf("Login Successful!");
         menu();
-        return;
     }
-    
     else
     {
         printf("\n\nWrong password!\a\a\a");
-    }
 
-login_try:
-        printf("\nEnter 1 to try again and 0 to exit. \n");
-        main_exit = getInt();
+    login_try:
+        printf("\nEnter 1 to try again and 0 to exit. ");
+        scanf("%d", &main_exit);
         if (main_exit == 1)
         {
+
             system("cls");
             goto login_attempt;
         }
@@ -202,4 +193,17 @@ login_try:
             system("cls");
             goto login_try;
         }
+    }
+    return;
+}
+
+float calcEMI(float principal, float ratepercent_per_annum, int installments)
+{
+    float emi;
+    float rate;
+    float val;
+    rate = ratepercent_per_annum/1200;
+    val = pow((1+rate),installments);
+    emi = principal*rate*val/(val-1);
+    return emi;
 }
