@@ -166,7 +166,95 @@ add_invalid:
 }
 
 void transact(void){
-return;
+
+    int choice, test = 0;
+    FILE *old, *newrec;
+    old = fopen("record.txt", "r");
+    newrec = fopen("new.txt", "w");
+
+    printf("\nEnter the account no. of the customer:");
+    FLUSH
+    scanf("%d", &transaction.acc_no);
+    while (fscanf(old, FORMAT, SCANFILE(add)) != EOF)
+    {
+
+        if (add.acc_no == transaction.acc_no)
+        {
+            test = 1;
+            if (strcmpi(add.acc_type, "fixed1") == 0 || strcmpi(add.acc_type, "fixed2") == 0 || strcmpi(add.acc_type, "fixed3") == 0)
+            {
+                printf("\a\a\a\n\nYou cannot deposit or withdraw cash from fixed accounts. Kindly wait until more transaction features are made available.");
+                fordelay(1000000000);
+                system("cls");
+                return;
+            }
+        transact_account:
+            printf("\n\nTransaction:\n\n1: Deposit \n2: Withdrawal \nAny other number: Exit. \n\nEnter your choice :");
+            choice = getInt();
+            if (choice == 1)
+            {
+                FLUSH
+                printf("\nEnter the amount you want to deposit: $");
+                transaction.amt = getFloat();             
+                add.amt += transaction.amt;
+                fprintf(newrec, FORMAT, PRINTFILE(add));
+                printf("\n\nDeposited successfully!");
+            }
+            else if(choice == 2)
+            {
+                FLUSH
+                printf("\nEnter the amount you want to withdraw: $");
+                transaction.amt = getFloat();
+                if(add.amt-10<transaction.amt)
+                {
+                    printf("\n\nTransaction declined. \nInsufficient Funds in account.");
+                    goto transact_account;
+                }  
+                else
+                    add.amt -= transaction.amt;
+                fprintf(newrec, FORMAT, PRINTFILE(add));
+                printf("\n\nWithdrawn successfully!");
+            }
+        }
+        else
+        {
+            fprintf(newrec, FORMAT, PRINTFILE(add));
+        }
+    }
+    fclose(old);
+    fclose(newrec);
+    remove("record.txt");
+    rename("new.txt", "record.txt");
+
+    if (test != 1)
+    {
+        printf("\n\nRecord not found!!");
+    transact_invalid:
+        printf("\n\n\nEnter 0 to try again,1 to return to main menu and 2 to exit:");
+        main_exit = getInt();
+        system("cls");
+        if (main_exit == 0)
+            transact();
+        else if (main_exit == 1)
+            return;
+        else if (main_exit == 2)
+            exit(0);
+        else
+        {
+            printf("\nInvalid  Input.");
+            goto transact_invalid;
+        }
+    }
+    else
+    {
+        printf("\nEnter 1 to go to the main menu and any other number to exit. ");
+        main_exit = getInt();
+        system("cls");
+        if (main_exit == 1)
+            return;
+        else
+            exit(0);
+    }
 }
 
 void closeAccount(void)
