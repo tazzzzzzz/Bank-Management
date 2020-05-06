@@ -2,8 +2,39 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <math.h>
+#include <ctype.h>
 #include "data.h"
+#include "inputvalidation.h"
 
+// long getLong(){
+//     char *p, s[100];
+//     long n;
+
+//     while (fgets(s, sizeof(s), stdin)) {
+//         n = strtol(s, &p, 10);
+//         if (p == s || *p != '\n') {
+//             printf("\nPlease enter the account number: ");
+//         } else break;
+//     }
+//     printf("You entered: %ld\n", n);
+//     return n;
+// }
+
+float getFloat(){
+        char buffer[100];
+    double value;
+    char *endptr;
+    // if (fgets(buffer, sizeof(buffer) stdin) == NULL)
+    //     return -1; /* Unexpected error */
+    value = strtod(buffer, &endptr);
+    if ((*endptr == '\0') || (isspace(*endptr) != 0)){
+        printf("It's float: %f\n", value);
+        return value;
+    }
+    else
+        printf("It's NOT float ...\n");
+        return 0;
+}
 
 void create()
 {
@@ -13,10 +44,7 @@ void create()
 
     ptr = fopen("record.txt", "a+");
 
-account_no:
-    system("cls");
-    printf("\t\t\t ADD RECORD  ");
-  
+
     //Get Time.
     SYSTEMTIME t; 
     GetLocalTime(&t);
@@ -25,11 +53,17 @@ account_no:
     add.deposit.month = t.wMonth;
     add.deposit.year = t.wYear;
 
-    printf("\nEnter the account number:");
-    scanf("%d", &check.acc_no);
+    
+account_no:
+    system("cls");
+    printf("\t\t\t ADD RECORD  ");
+   
+    check.acc_no = getLong();
+
+//     printf("\nEnter the account number:");
+//     scanf("%d", &check.acc_no);
     while (fscanf(ptr, FORMAT, &add.acc_no, add.name, &add.dob.month, &add.dob.day, &add.dob.year, &add.age, add.address, add.citizenship, &add.phone, add.acc_type, &add.amt, &add.deposit.month, &add.deposit.day, &add.deposit.year) != EOF)
     {
-  //      printf("\n%d", test++);
         if (check.acc_no == add.acc_no)
         {
             printf("Account no. already in use!");
@@ -42,19 +76,27 @@ account_no:
     add.acc_no = check.acc_no;
 
     printf("\nEnter the name:");
-    scanf("%s", add.name);
+    scanf("%[^\n]s", add.name);
 
     validate_dob:
     printf("\nEnter the date of birth (DD/MM/YYYY):");
-    scanf("%d/%d/%d", &add.dob.day, &add.dob.month, &add.dob.year);
+    int c = 0;          /* value to test for end of input buffer */
+
+    while ((scanf("%d/%d/%d",&add.dob.month,&add.dob.day,&add.dob.year) != 3)) 
+    {
+        printf("\nThe above date of birth is invalid.\nEnter a valid date of birth(mm/dd/yyyy):");
+        do { c = getchar(); } while (c != '\n' && c != EOF);  /* flush input buffer */
+    }
+
     if( !(valid_date(add.dob.day,add.dob.month,add.dob.year,add.deposit.day,add.deposit.month,add.deposit.year))){
         fordelay(1000000000);
         goto validate_dob;
     }
+
     add.age = findAge(t.wDay, t.wMonth, t.wYear,add.dob.day,add.dob.month,add.dob.year);
 
     printf("\nEnter the address:");
-    scanf("%s", add.address);
+    scanf("%[^\n]s", add.address);
 
     
 citizenship_validation:
@@ -80,7 +122,7 @@ citizenship_validation:
     scanf("%lf", &add.phone);
 amount_to_deposit:
     printf("\nEnter the amount to deposit:$");
-    scanf("%f", &add.amt);
+    add.amt = getFloat();
     if(add.amt<=10)
     {
         printf("You need to deposit a minimum of $10.");

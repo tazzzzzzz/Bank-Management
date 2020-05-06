@@ -1,3 +1,7 @@
+
+#define ENTER 13
+#define BKSP 8
+#define TAB 9
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -8,9 +12,6 @@
 #include "arjun.h"
 #include "data.h"
 
-#define ENTER 13
-#define TAB 9
-#define BKSP 8
 
 static inline float interest(float t, float amount, int rate)
 {
@@ -286,4 +287,19 @@ EXP30-C. Do not depend on order of evaluation between sequence points
         }
     }
     return;
+}
+
+long getAcccount()
+{
+    char *p, s[100];
+    long n;
+
+    while (fgets(s, sizeof(s), stdin)) {
+        n = strtol(s, &p, 10);
+        if (p == s || *p != '\n') {
+            printf("\nPlease enter the account number: ");
+        } else break;
+    }
+    printf("You entered: %ld\n", n);
+    return n;
 }
