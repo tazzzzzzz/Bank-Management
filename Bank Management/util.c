@@ -99,7 +99,7 @@ menu:
         goto menu;
         break;
     case 5:
-        delete ();
+        closeAccount();
         goto menu;
         break;
     case 6:

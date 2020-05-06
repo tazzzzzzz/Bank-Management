@@ -4,7 +4,7 @@ void create();
 
 void transact(void);
 
-void remove(void);
+void closeAccount(void);
 
 //arjun.h
 void view_list();
