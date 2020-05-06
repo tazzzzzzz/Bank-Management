@@ -172,13 +172,15 @@ void transact(void){
     old = fopen("record.txt", "r");
     newrec = fopen("new.txt", "w");
 
+    long transactionAccount;
+
     printf("\nEnter the account no. of the customer:");
     FLUSH
-    scanf("%d", &transaction.acc_no);
+    transactionAccount = getLong();
     while (fscanf(old, FORMAT, SCANFILE(add)) != EOF)
     {
 
-        if (add.acc_no == transaction.acc_no)
+        if (add.acc_no == transactionAccount)
         {
             test = 1;
             if (strcmpi(add.acc_type, "fixed1") == 0 || strcmpi(add.acc_type, "fixed2") == 0 || strcmpi(add.acc_type, "fixed3") == 0)
@@ -195,8 +197,8 @@ void transact(void){
             {
                 FLUSH
                 printf("\nEnter the amount you want to deposit: $");
-                transaction.amt = getFloat();             
-                add.amt += transaction.amt;
+                float transactionAmt = getFloat();             
+                add.amt += transactionAmt;
                 fprintf(newrec, FORMAT, PRINTFILE(add));
                 printf("\n\nDeposited successfully!");
             }
@@ -204,14 +206,14 @@ void transact(void){
             {
                 FLUSH
                 printf("\nEnter the amount you want to withdraw: $");
-                transaction.amt = getFloat();
-                if(add.amt-10<transaction.amt)
+                transactionAmt = getFloat();
+                if(add.amt-10<transactionAmt)
                 {
                     printf("\n\nTransaction declined. \nInsufficient Funds in account.");
                     goto transact_account;
                 }  
                 else
-                    add.amt -= transaction.amt;
+                    add.amt -= transactionAmt;
                 fprintf(newrec, FORMAT, PRINTFILE(add));
                 printf("\n\nWithdrawn successfully!");
             }
@@ -255,6 +257,15 @@ void transact(void){
         else
             exit(0);
     }
+}
+
+void transfers(void){
+    int choice, test = 0;
+    FILE *old, *newrec;
+    old = fopen("record.txt", "r");
+    newrec = fopen("new.txt", "w");
+
+ 
 }
 
 void closeAccount(void)
@@ -333,6 +344,7 @@ void closeAccount(void)
             exit(0);
     }
 }
+
 
 
 //arjun.h
