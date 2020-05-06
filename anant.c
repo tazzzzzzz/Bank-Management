@@ -6,36 +6,6 @@
 #include "data.h"
 #include "inputvalidation.h"
 
-// long getLong(){
-//     char *p, s[100];
-//     long n;
-
-//     while (fgets(s, sizeof(s), stdin)) {
-//         n = strtol(s, &p, 10);
-//         if (p == s || *p != '\n') {
-//             printf("\nPlease enter the account number: ");
-//         } else break;
-//     }
-//     printf("You entered: %ld\n", n);
-//     return n;
-// }
-
-float getFloat(){
-        char buffer[100];
-    double value;
-    char *endptr;
-    // if (fgets(buffer, sizeof(buffer) stdin) == NULL)
-    //     return -1; /* Unexpected error */
-    value = strtod(buffer, &endptr);
-    if ((*endptr == '\0') || (isspace(*endptr) != 0)){
-        printf("It's float: %f\n", value);
-        return value;
-    }
-    else
-        printf("It's NOT float ...\n");
-        return 0;
-}
-
 void create()
 {
     int choice;
@@ -60,8 +30,6 @@ account_no:
    
     check.acc_no = getLong();
 
-//     printf("\nEnter the account number:");
-//     scanf("%d", &check.acc_no);
     while (fscanf(ptr, FORMAT, &add.acc_no, add.name, &add.dob.month, &add.dob.day, &add.dob.year, &add.age, add.address, add.citizenship, &add.phone, add.acc_type, &add.amt, &add.deposit.month, &add.deposit.day, &add.deposit.year) != EOF)
     {
         if (check.acc_no == add.acc_no)
@@ -74,11 +42,11 @@ account_no:
         }
     }
     add.acc_no = check.acc_no;
-
+account_name:
     printf("\nEnter the name:");
     scanf("%[^\n]s", add.name);
 
-    validate_dob:
+validate_dob:
     printf("\nEnter the date of birth (DD/MM/YYYY):");
     int c = 0;          /* value to test for end of input buffer */
 
@@ -92,20 +60,17 @@ account_no:
         fordelay(1000000000);
         goto validate_dob;
     }
-
+age:
     add.age = findAge(t.wDay, t.wMonth, t.wYear,add.dob.day,add.dob.month,add.dob.year);
-
+address:
     printf("\nEnter the address:");
-    scanf("%[^\n]s", add.address);
+    scanf("%s", add.address);
 
     
 citizenship_validation:
     printf("\nEnter the citizenship number:");
     scanf("%s", add.citizenship);
-//    printf("\nFTELL:%d",ftell(ptr));
     fseek (ptr , 0 , SEEK_SET );
- //   printf("\nFTELL:%d",ftell(ptr));
-//    printf("\n%s",add.citizenship);
     while (fscanf(ptr, FORMAT, &check.acc_no, check.name, &check.dob.day, &check.dob.month, &check.dob.year, &check.age, check.address, check.citizenship, &check.phone, check.acc_type, &check.amt, &check.deposit.day, &check.deposit.month, &check.deposit.year)!=EOF)
     {
         if (!strcmp(check.citizenship,add.citizenship))
@@ -128,7 +93,7 @@ amount_to_deposit:
         printf("You need to deposit a minimum of $10.");
         goto amount_to_deposit;
     }
-
+account_type:
     printf("\nType of account: ");
     printf("\n\t-> Saving\n\t-> Current\n");
     printf("\t-> Fixed1(for 1 year)\n\t-> Fixed2(for 2 years)\n\t-> Fixed3(for 3 years)");
@@ -244,7 +209,7 @@ void transact(void)
     fclose(newrec);
 }
 
-void delete(void)
+void remove(void)
 {
     FILE *old, *newrec;
     int test = 0;
@@ -279,7 +244,7 @@ void delete(void)
         else if (main_exit == 2)
             exit(0);
         else if (main_exit == 0)
-            delete();
+            remove();
         else
         {
             printf("\nInvalid!\a");
