@@ -76,7 +76,7 @@ long phoneNumber()
 	}
     if(cnt!=10){
         printf("Enter a valid phone number. \n");
-        return;
+        return -1;
     }
 	s[cnt]='\0';
 	return atoi(s);

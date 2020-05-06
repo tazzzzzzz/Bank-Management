@@ -62,7 +62,6 @@ validate_dob:
 
     while ((scanf("%d/%d/%d",&add.dob.day,&add.dob.month,&add.dob.year) != 3)) 
     {
-        printf(("WRONG"));
         printf("\nThe above date of birth is invalid.\nEnter a valid date of birth(mm/dd/yyyy):");
         do { c = getchar(); } while (c != '\n' && c != EOF);  /* flush input buffer */
     }
@@ -178,8 +177,9 @@ void closeAccount(void)
     old = fopen("record.txt", "r");
     newrec = fopen("new.txt", "w");
     printf("\nEnter the account no. of the customer you want to delete:");
-    rem = getLong();
     FLUSH
+    rem = getLong();
+
     // printf("%ld is going to be deleted. ",rem);
     while (fscanf(old, FORMAT, SCANFILE(add)) != EOF)
     {
@@ -191,18 +191,16 @@ void closeAccount(void)
         else
         {
             test++;
-            printf("\nRecord deleted successfully!\n");
+            printf("\nRecord located.\n");
         }
     }
 
     fclose(old);
     fclose(newrec);
 
-    remove("record.txt");
-    rename("new.txt", "record.txt");
     if (test == 0)
     {
-        printf("\nRecord not found!\a\a\a");
+        printf("\nRecord not found.\a\a\a");
     
     delete_invalid:
         printf("\nEnter 0 to try deleting another record, 1 to return to main menu, 2 to exit. ");
@@ -216,14 +214,29 @@ void closeAccount(void)
             closeAccount();
         else
         {
-            printf("\nInvalid!\a");
+            printf("\nInvalid! Kindly input a valid option.\a");
             goto delete_invalid;
         }
     }
     
     else
     {
-        printf("\nEnter 1 to go to the main menu and 0 to exit. ");
+        int choice;
+        printf("\nYou need to login before you can delete.");
+
+        int loginStatus = passwordAuthentication();
+
+        if(loginStatus){
+
+            remove("record.txt");
+            rename("new.txt", "record.txt");
+        }
+        else{
+            remove("new.txt");
+            printf("\nSorry, you're not authorized to delete records at this moment.");
+        }
+
+        printf("\nEnter 1 to go to the main menu and any other number to exit. ");
         main_exit = getInt();
         system("cls");
         if (main_exit == 1)

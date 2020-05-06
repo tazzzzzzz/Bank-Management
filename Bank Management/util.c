@@ -11,6 +11,8 @@
 #include "data.h"
 #include "majorfunction.h"
 #include "utilFunctions.h"
+#include "inputValidation.h"
+
 
 
 static inline float interest(float t, float amount, int rate)
@@ -107,28 +109,23 @@ void menu(void)
         goto menu;
         break;
     case 7:
-        return;
         break;
     }
 }
 
-
-// EXP30-C. Do not depend on order of evaluation between sequence points
-void start()
+int passwordAuthentication()
 {
-    char pwd[10], password[10] = "root";
-    int i = 0;
+    char pwd[10];int i = 0;
 
     int p = 0;
     char ch;
-    login_attempt:
+    
     printf("Enter your password. Hit ENTER to confirm.\n");
     printf("Password:");
 
     while (1)
     {
         ch = getch(); //get key
-
         if (ch == ENTER || ch == TAB)
         {
             pwd[p] = '\0';
@@ -145,14 +142,28 @@ void start()
         else
         {
             pwd[p] = ch;
-            p += 1;
-  
+            p += 1;  
             printf("* \b"); //to replace password character with *
         }
     }
-
     if (strcmp(pwd, password) == 0)
     {
+        // printf("\n\nPassword Match!\nLOADING");
+        return 1;        
+    }
+    else
+    {
+        printf("\n\nPassword Incorrect.");
+        return 0;
+    }
+}
+
+
+// EXP30-C. Do not depend on order of evaluation between sequence points
+void start()
+{
+login_attempt:
+    if(passwordAuthentication()){
         printf("\n\nPassword Match!\nLOADING");
         for (i = 0; i <= 6; i++)
         {
@@ -162,17 +173,19 @@ void start()
         system("cls");
         printf("Login Successful!");
         menu();
+        return;
     }
+    
     else
     {
         printf("\n\nWrong password!\a\a\a");
+    }
 
-    login_try:
-        printf("\nEnter 1 to try again and 0 to exit. ");
-        scanf("%d", &main_exit);
+login_try:
+        printf("\nEnter 1 to try again and 0 to exit. \n");
+        main_exit = getInt();
         if (main_exit == 1)
         {
-
             system("cls");
             goto login_attempt;
         }
@@ -189,6 +202,4 @@ void start()
             system("cls");
             goto login_try;
         }
-    }
-    return;
 }
