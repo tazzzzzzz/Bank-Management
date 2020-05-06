@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 #include <conio.h>
 #include <windows.h>
 #include "anant.h"
@@ -75,90 +76,59 @@ EXP33-C. Do not reference uninitialized variables.
     return 1;
 }
 
-int Check_Email_Addr(char *EM_Addr)
+int Check_Email_Addr(const char *address)
 {
     int count = 0;
-    int i = 0;
-    char conv_buf[200];
-    char *c, *domain;
-    char *special_chars = "()<>@,;:\"[]";
-
-    /* The input is in EBCDIC so convert to ASCII first */
-    strcpy(conv_buf, EM_Addr);
-    EtoA(conv_buf);
-    /* convert the special chars to ASCII */
-    EtoA(special_chars);
-
-    for (c = conv_buf; *c; c++)
+    const char *c, *domain;
+    static char *rfc822_specials = "()<>@,;:\\\"[]";
+    /* first we validate the name portion (name@domain) */
+    for (c = address; *c; c++)
     {
-        /* if '"' and beginning or previous is a '.' or '"' */
-        if (*c == 34 && (c == conv_buf || *(c - 1) == 46 || *(c - 1) == 34))
+        if (*c == '\"' && (c == address || *(c - 1) == '.' || *(c - 1) == '\"'))
         {
             while (*++c)
             {
-                /* if '"' break, End of name */
-                if (*c == 34)
+                if (*c == '\"')
                     break;
-                /* if '' and ' ' */
-                if (*c == 92 && (*++c == 32))
+                if (*c == '\\' && (*++c == ' '))
                     continue;
-                /* if not between ' ' & '~' */
-                if (*c <= 32 || *c > 127)
+                if (*c <= ' ' || *c >= 127)
                     return 0;
             }
-            /* if no more characters error */
             if (!*c++)
                 return 0;
-            /* found '@' */
-            if (*c == 64)
+            if (*c == '@')
                 break;
-            /* '.' required */
-            if (*c != 46)
+            if (*c != '.')
                 return 0;
             continue;
         }
-        if (*c == 64)
-        {
+        if (*c == '@')
             break;
-        }
-        /* make sure between ' ' && '~' */
-        if (*c <= 32 || *c > 127)
-        {
+        if (*c <= ' ' || *c >= 127)
             return 0;
-        }
-        /* check special chars */
-        if (strchr(special_chars, *c))
-        {
+        if (strchr(rfc822_specials, *c))
             return 0;
-        }
-    } /* end of for loop */
-    /* found '@' */
-    /* if at beginning or previous = '.' */
-    if (c == conv_buf || *(c - 1) == 46)
+    }
+    if (c == address || *(c - 1) == '.')
         return 0;
-    /* next we validate the domain portion */
-    /* if the next character is NULL */
-    /* need domain ! */
+    /* next we validate the domain portion (name@domain) */
     if (!*(domain = ++c))
         return 0;
     do
     {
-        /* if '.' */
-        if (*c == 46)
+        if (*c == '.')
         {
-            /* if beginning or previous = '.' */
-            if (c == domain || *(c - 1) == 46)
+            if (c == domain || *(c - 1) == '.')
                 return 0;
-            /* count '.' need at least 1 */
             count++;
         }
-        /* make sure between ' ' and '~' */
-        if (*c <= 32 || *c >= 127)
+        if (*c <= ' ' || *c >= 127)
             return 0;
-        if (strchr(special_chars, *c))
+        if (strchr(rfc822_specials, *c))
             return 0;
-    } while (*++c);      /* while valid char */
-    return (count >= 1); /* return true if more than 1 '.' */
+    } while (*++c);
+    return (count >= 1);
 }
 
 int findAge(int current_date, int current_month, int current_year, int birth_date, int birth_month, int birth_year)
