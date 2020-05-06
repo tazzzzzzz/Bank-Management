@@ -71,7 +71,7 @@ int findAge(int current_date, int current_month, int current_year, int birth_dat
 void menu(void)
 {
     int choice;
-menu:
+    menu:
     system("cls");
     //system("color 99");
     printf("\n\n\t\t\tCUSTOMER ACCOUNT BANKING MANAGEMENT SYSTEM");
@@ -121,7 +121,7 @@ void start()
 
     int p = 0;
     char ch;
-login_attempt:
+    login_attempt:
     printf("Enter your password. Hit ENTER to confirm.\n");
     printf("Password:");
 
@@ -161,13 +161,13 @@ login_attempt:
         }
         system("cls");
         printf("Login Successful!");
-        // menu();
+        menu();
     }
     else
     {
         printf("\n\nWrong password!\a\a\a");
 
-login_try:
+    login_try:
         printf("\nEnter 1 to try again and 0 to exit. ");
         scanf("%d", &main_exit);
         if (main_exit == 1)

@@ -28,10 +28,11 @@ long getLong(){
     while (fgets(s, sizeof(s), stdin)) {
         n = strtol(s, &p, 10);
         if (p == s || *p != '\n') {
-            printf("\nPlease enter the account number: ");
-        } else break;
+            printf("\nPlease enter a valid number: ");
+        } 
+        else 
+            break;
     }
-    printf("You entered: %ld\n", n);
     return n;
 }
 
