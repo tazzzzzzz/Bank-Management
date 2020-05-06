@@ -23,6 +23,8 @@ typedef struct account{
     struct date dob;
     struct date deposit;
     struct date withdraw;
+    struct date currloan;
+
 
 }account;
-account add,upd,check,transaction;
+account add,upd,check,ln;

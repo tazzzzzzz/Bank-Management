@@ -15,7 +15,7 @@
 
 
 
-static inline float interest(float t, float amount, int rate)
+float interest(float t, float amount, int rate)
 {
     
     // CERT C:    
@@ -78,7 +78,7 @@ void menu(void)
     //system("color 99");
     printf("\n\n\t\t\tCUSTOMER ACCOUNT BANKING MANAGEMENT SYSTEM");
     printf("\n\n\n\t\t\t WELCOME TO THE MAIN MENU ");
-    printf("\n\n\t\t1.Create new account\n\t\t2.Update information of existing account\n\t\t3.For transactions\n\t\t4.Check the details of existing account\n\t\t5.Removing existing account\n\t\t6.View customer's list\n\t\t7.Exit\n\n\n\n\n\t\t Enter your choice:");
+    printf("\n\n\t\t1.Create new account\n\t\t2.Update information of existing account\n\t\t3.For transactions\n\t\t4.Check the details of existing account\n\t\t5.Removing existing account\n\t\t6.View customer's list\n\t\t7.Loan Application\n\t\t8.Exit\n\n\n\n\n\t\t Enter your choice:");
     scanf("%d", &choice);
 
     system("cls");
@@ -109,6 +109,10 @@ void menu(void)
         goto menu;
         break;
     case 7:
+        loan();
+        goto menu;
+        break;
+    case 8:
         break;
     }
 }
@@ -202,4 +206,17 @@ login_try:
             system("cls");
             goto login_try;
         }
+}
+
+
+
+float calcEMI(float principal, float ratepercent_per_annum, int installments)
+{
+    float emi;
+    float rate;
+    float val;
+    rate = ratepercent_per_annum/1200;
+    val = pow((1+rate),installments);
+    emi = principal*rate*val/(val-1);
+    return emi;
 }

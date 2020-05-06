@@ -4,6 +4,7 @@
 #include <string.h>
 #include <conio.h>
 #include <windows.h>
+#include<ctype.h>
 #include "data.h"
 #include "inputValidation.h"
 #include "majorfunction.h"
@@ -11,7 +12,7 @@
 
 //anant.h
 //File so that unit testing of each function works.
-void create(){
+void create(void){
 
     int choice;
     //int test = 0;
@@ -174,11 +175,12 @@ void transact(void){
 
     printf("\nEnter the account no. of the customer:");
     FLUSH
-    scanf("%d", &transaction.acc_no);
+    long transactionAccount;
+    transactionAccount = getLong();
     while (fscanf(old, FORMAT, SCANFILE(add)) != EOF)
     {
 
-        if (add.acc_no == transaction.acc_no)
+        if (add.acc_no == transactionAccount)
         {
             test = 1;
             if (strcmpi(add.acc_type, "fixed1") == 0 || strcmpi(add.acc_type, "fixed2") == 0 || strcmpi(add.acc_type, "fixed3") == 0)
@@ -195,8 +197,8 @@ void transact(void){
             {
                 FLUSH
                 printf("\nEnter the amount you want to deposit: $");
-                transaction.amt = getFloat();             
-                add.amt += transaction.amt;
+                float transactionAmount = getFloat();             
+                add.amt +=  transactionAmount;
                 fprintf(newrec, FORMAT, PRINTFILE(add));
                 printf("\n\nDeposited successfully!");
             }
@@ -204,14 +206,14 @@ void transact(void){
             {
                 FLUSH
                 printf("\nEnter the amount you want to withdraw: $");
-                transaction.amt = getFloat();
-                if(add.amt-10<transaction.amt)
+                 float  transactionAmount = getFloat();
+                if(add.amt-10< transactionAmount)
                 {
                     printf("\n\nTransaction declined. \nInsufficient Funds in account.");
                     goto transact_account;
                 }  
                 else
-                    add.amt -= transaction.amt;
+                    add.amt -=  transactionAmount;
                 fprintf(newrec, FORMAT, PRINTFILE(add));
                 printf("\n\nWithdrawn successfully!");
             }
@@ -334,11 +336,181 @@ void closeAccount(void)
     }
 }
 
+// void transfer(void){
+    
+//     int choice, test = 0;
+//     FILE *old, *newrec;
+//     old = fopen("record.txt", "r");
+//     newrec = fopen("new.txt", "w");
 
+//     printf("\nEnter the account no. of the payer:");
+//     FLUSH
+// payer:
+//     long payerAccount;
+//     payerAccount = getLong();
+//     int x = 0;
+
+//     while (fscanf(old, FORMAT, SCANFILE(add)) != EOF)
+//     {
+//         printf(FORMAT,PRINTFILE(add));
+//         if (payerAccount == add.acc_no)
+//         {
+//             if(strcmpi(add.acc_type, "fixed1") == 0 || strcmpi(add.acc_type, "fixed2") == 0 || strcmpi(add.acc_type, "fixed3") == 0){
+//                 printf("\a\a\a\n\nYou cannot deposit or withdraw cash from fixed accounts. Kindly wait until more transaction features are made available.");            
+//                 break;
+//             }
+//             else{
+//                 int x = 1; 
+//                 break;
+//             }
+//             fseek(old, 0, SEEK_SET);
+//             goto payer;
+//             break;
+//             fordelay(1000000000);
+//         }
+//     }
+
+//     while (fscanf(old, FORMAT, SCANFILE(add)) != EOF)
+//     {
+//         if (add.acc_no == payerAccount)
+//         {
+//             test = 1;
+//             if (strcmpi(add.acc_type, "fixed1") == 0 || strcmpi(add.acc_type, "fixed2") == 0 || strcmpi(add.acc_type, "fixed3") == 0)
+//             {
+//                 printf("\a\a\a\n\nYou cannot deposit or withdraw cash from fixed accounts. Kindly wait until more transaction features are made available.");
+//                 fordelay(1000000000);
+//                 system("cls");
+//                 return;
+//             }
+//         transact_account:
+//             if (choice == 1)
+//             {
+//                 FLUSH
+//                 printf("\nEnter the amount you want to deposit: $");
+//                 float transactionAmount = getFloat();             
+//                 add.amt +=  transactionAmount;
+//                 fprintf(newrec, FORMAT, PRINTFILE(add));
+//                 printf("\n\nDeposited successfully!");
+//             }
+//             else if(choice == 2)
+//             {
+//                 FLUSH
+//                 printf("\nEnter the amount you want to withdraw: $");
+//                  float  transactionAmount = getFloat();
+//                 if(add.amt-10< transactionAmount)
+//                 {
+//                     printf("\n\nTransaction declined. \nInsufficient Funds in account.");
+//                     goto transact_account;
+//                 }  
+//                 else
+//                     add.amt -=  transactionAmount;
+//                 fprintf(newrec, FORMAT, PRINTFILE(add));
+//                 printf("\n\nWithdrawn successfully!");
+//             }
+//         }
+//         else
+//         {
+//             fprintf(newrec, FORMAT, PRINTFILE(add));
+//         }
+//     }
+//     fclose(old);
+//     fclose(newrec);
+//     remove("record.txt");
+//     rename("new.txt", "record.txt");
+
+//     if (test != 1)
+//     {
+//         printf("\n\nRecord not found!!");
+//     transact_invalid:
+//         printf("\n\n\nEnter 0 to try again,1 to return to main menu and 2 to exit:");
+//         main_exit = getInt();
+//         system("cls");
+//         if (main_exit == 0)
+//             transact();
+//         else if (main_exit == 1)
+//             return;
+//         else if (main_exit == 2)
+//             exit(0);
+//         else
+//         {
+//             printf("\nInvalid  Input.");
+//             goto transact_invalid;
+//         }
+//     }
+//     else
+//     {
+//         printf("\nEnter 1 to go to the main menu and any other number to exit. ");
+//         main_exit = getInt();
+//         system("cls");
+//         if (main_exit == 1)
+//             return;
+//         else
+//             exit(0);
+//     }
+// }
 //arjun.h
-void view_list(){
-return;
+void view_list()
+{
+    /*
+    RECOMMENDATIONS/RULES
+    DCL05-A. Use typedefs to improve code readability
+    */
+    typedef int flag;
+    //Display Records as a List
+    /*
+    RECOMMENDATION/RULES
+    DCL00-A. Declare immutable values using const or enum
+    DCL03-A: Place const as the rightmost declaration specifier
+    DCL33-C. Ensure that source and destination pointers in function arguments do not point to overlapping objects if they are restrict qualified
+    */
+    FILE *restrict const view = fopen("record.txt","r");
+    /*``
+    RECOMMENDATIONS/RULES
+    DCL09-A. Declare functions that return an errno with a return type of errno_t
+    */
+    int errnum;
+    if(view == NULL){
+        errnum = errno;
+        fprintf(stderr, "ERROR CODE: %d\n", errno);
+        perror("Error printed by perror");
+        fprintf(stderr, "Error opening file: %s\n", strerror( errnum ));
+        exit(0);
+    }
+
+    flag test=0; //Iterate Test variable to keep track of records
+    system("cls");
+    printf("________________________________________________________________________________________________________________________");
+    printf("\nACC. NO.\tNAME\t\t\t\tADDRESS\t\t\t\t\tPHONE\n");
+    printf("________________________________________________________________________________________________________________________");
+
+    while(fscanf(view,FORMAT, SCANFILE(add))!=EOF)
+       {
+           
+           printf("\n%ld\t\t %s\t\t%25s\t\t\t%ld",add.acc_no,add.name,add.address,add.phone);
+           test++;
+       }
+
+    fclose(view);
+    //Incase there are no previous records
+    if (test==0)
+        {   system("cls");
+            printf("\nNo Records Found.\n");}
+
+    view_list_invalid:
+     printf("\n\nEnter 1 to go to the main menu and 0 to exit. ");
+        main_exit = getInt();
+        system("cls");
+        if (main_exit==1)
+            return;
+        else if(main_exit==0)
+            exit(0);
+        else
+        {
+            printf("\nInvalid!\a");
+            goto view_list_invalid;
+        }
 }
+
 
 void edit(void){
 return;
