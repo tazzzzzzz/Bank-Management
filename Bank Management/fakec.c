@@ -4,7 +4,7 @@
 #include <string.h>
 #include <conio.h>
 #include <windows.h>
-#include <ctype.h>
+#include<ctype.h>
 #include "data.h"
 #include "inputValidation.h"
 #include "majorfunction.h"
@@ -36,7 +36,7 @@ account_no:
     check.acc_no = getLong();
     while (fscanf(ptr, FORMAT, SCANFILE(add)) != EOF)
     {
-        // printf(FORMAT,PRINTFILE(add));
+        printf(FORMAT,PRINTFILE(add));
         if (check.acc_no == add.acc_no)
         {
             printf("Account no. already in use!");
@@ -90,7 +90,7 @@ citizenship_validation:
     fseek (ptr , 0 , SEEK_SET );
     while (fscanf(ptr, FORMAT, SCANFILE(check))!=EOF)
     {
-        // printf(FORMAT,PRINTFILE(check));
+        printf(FORMAT,PRINTFILE(check));
 
         if (!strcmp(check.citizenship,add.citizenship))
         {
@@ -817,3 +817,5 @@ void see(void){
 
 
 }
+
+

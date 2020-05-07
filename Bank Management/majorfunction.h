@@ -15,4 +15,4 @@ void edit(void);
 
 void see(void);
 
-void loan();
+void loan(void);
