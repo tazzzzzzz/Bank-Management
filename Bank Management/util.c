@@ -215,6 +215,7 @@ float calcEMI(float principal, float ratepercent_per_annum, int installments)
     float emi;
     float rate;
     float val;
+    printf("Rate of interest per annum for your account: %f",ratepercent_per_annum);
     rate = ratepercent_per_annum/1200;
     val = pow((1+rate),installments);
     emi = principal*rate*val/(val-1);
