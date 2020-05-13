@@ -1,4 +1,4 @@
-long getAcccount(); //Done
+long getLong(); //Done
 float getFloat(); //Done
 int getInt();   //Done
 long phoneNumber();

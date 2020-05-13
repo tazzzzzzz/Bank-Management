@@ -8,11 +8,19 @@
 #include <windows.h>
 #include<ctype.h>
 #include "data.h"
-//#include "majorfunction.h"
 #include "utilFunctions.h"
 #include "inputValidation.h"
 void loan(void)
 {
+    typedef int flag;
+    typedef int option;
+    flag test=0;
+    option choice;
+    int rate, criteria = 0, no_of_installments = 0;
+    float time, EMI, amt, intrst, min_amt;
+    char ch, violations[100] = "";
+    long acc_no;
+    
     system("cls");
 
     printf("\nWelcome to the loan application page");
@@ -21,15 +29,14 @@ void loan(void)
     fordelay(1000000000);
     printf("\n\n\n\n\tPlease enter account number: ");
     FLUSH
-    ln.acc_no = getLong();
+    acc_no = getLong();
 
      /*
     RECOMMENDATIONS/RULES
     DCL05-A. Use typedefs to improve code readability
     */
 
-    typedef int flag;
-    typedef int option;
+    
 
     //Display Records as a List
     /*
@@ -54,16 +61,9 @@ void loan(void)
         fprintf(stderr, "Error opening file: %s\n", strerror( errnum ));
         exit(0);
     }
-    flag test=0;
-    int rate;
-    option choice;
-    float time, EMI;
-    float intrst, min_amt;
-    int criteria = 0;
-    int no_of_installments = 0;
-    char ch;
-    char violations[100] = "";
-
+    SYSTEMTIME t; 
+        GetLocalTime(&t);
+        
     /*
     RECOMMENDATIONS/RULES
     DCL06-A. Use meaningful symbolic constants to represent literal values in program logic
@@ -71,66 +71,73 @@ void loan(void)
     
     //enum {RATE_FIXED1=9, RATE_FIXED2=11,RATE_FIXED3=13,RATE_SAVING=8};
 
-    while (fscanf(ptr,FORMAT, &add.acc_no,add.name,&add.dob.month,&add.dob.day,&add.dob.year,&add.age,add.address,add.citizenship,&add.phone,add.acc_type,&add.amt,&add.deposit.month,&add.deposit.day,&add.deposit.year)!=EOF)
+    while (fscanf(ptr,FORMAT, SCANFILE(user))!=EOF)
     {
-        if(add.acc_no==ln.acc_no)
+        if(user.acc_no==acc_no)
         {   
-            strcpy(ln.name, add.name);
-            strcpy(ln.acc_type, add.acc_type);
+            //FILE *loanptr = fopen("loandetails.txt","r");
+            // while(fscanf(loanptr,"%d %s %d/%d/%d %f %f %d\n",add.acc_no, add.name, add.currloan.day, add.currloan.month, add.currloan.year, add.amt, EMI, no_of_installments)){
+            //     printf("%d",no_of_installments);
+            //     if(add.acc_no == acc_no && (add.currloan.year + (no_of_installments/12)) > t.wYear){
+            //         printf("\nThis account already has an outstanding loan. Kindly select another account...");
+            //         fordelay(1000000000);
+            //         return;
+            //     }
+            
+            // }
+            // fclose(loanptr);
             system("cls");
             test=1;
             //Each of the following conditions are used to determine the interest by a certain date based on the type of account
             //Fixed Accounts
-            if(strcmpi(ln.acc_type,"fixed1")==0)
+            if(strcmpi(user.acc_type,"fixed1")==0)
                 {
                 
                 rate=11;
-                intrst=interest(time,add.amt,rate);
+                intrst=interest(time,user.amt,rate);
                 min_amt = (float)1000;
                 }
-            else if(strcmpi(ln.acc_type,"fixed2")==0)
+            else if(strcmpi(user.acc_type,"fixed2")==0)
                 {
                 
                 rate=11;
-                intrst=interest(time,add.amt,rate);
+                intrst=interest(time,user.amt,rate);
                 min_amt = (float)1000;
 
                 }
-            else if(strcmpi(ln.acc_type,"fixed3")==0)
+            else if(strcmpi(user.acc_type,"fixed3")==0)
             {
                 
                 rate=11;
-                intrst=interest(time,add.amt,rate);
+                intrst=interest(time,user.amt,rate);
                 min_amt = (float)1000;
 
             }
             //Savings Account
-            else if(strcmpi(ln.acc_type,"saving")==0)
+            else if(strcmpi(user.acc_type,"saving")==0)
             {
                 
                 rate=11;
-                intrst=interest(time,add.amt,rate);
+                intrst=interest(time,user.amt,rate);
                 min_amt = (float)1000;
 
             }
             //Current Account
-            else if(strcmpi(ln.acc_type,"current")==0)
+            else if(strcmpi(user.acc_type,"current")==0)
             {
                 rate = 11;
                 intrst = 0;
                 min_amt = (float)1000;
             }
             strcpy(violations,"");
-            ln.age = add.age;
-            if (ln.age<21 || ln.age>60){
+            if (user.age<21 || user.age>60){
                 //Failed age criteria
                 criteria += 1;
                 strncat(violations,"\tFailed Age Criteria",20);
             }
 
-            //printf("%f",add.amt);
 
-            if (add.amt < min_amt){
+            if (user.amt < min_amt){
                 //failed minimum amount criteria
                 criteria += 1;
                 strncat(violations,"\n\tFailed Min Amount Criteria",50);
@@ -154,31 +161,29 @@ void loan(void)
             }
             else
             {
-                SYSTEMTIME t; 
-                GetLocalTime(&t);
-                ln.currloan.day = t.wDay; 
-                ln.currloan.month = t.wMonth;
-                ln.currloan.year = t.wYear;
+                user.currloan.day = t.wDay; 
+                user.currloan.month = t.wMonth;
+                user.currloan.year = t.wYear;
 
                 printf("\nPlease Enter Loan Amount: ");
                 FLUSH
-                ln.amt = getFloat();
+                amt = getFloat();
                 
                 inputinstallments:
-                printf("\nPlease enter the number of installments (6, 12 or 24 months): ");
+                printf("\nPlease enter the number of installments (12, 24 or 48 months): ");
                 no_of_installments = getInt();
 
-                if (no_of_installments != 6 && no_of_installments!=12 && no_of_installments!=24){
+                if (no_of_installments != 12 && no_of_installments!=24 && no_of_installments!=48){
                     goto inputinstallments;
                 }
                 
-                printf("\nType of Account: %s",ln.acc_type);
-                EMI = calcEMI(ln.amt, rate, no_of_installments);
+                printf("\nType of Account: %s",user.acc_type);
+                EMI = calcEMI(amt, rate, no_of_installments);
 
 
-                printf("\n\n\tCalculated EMI: %f",EMI);
+                printf("\n\nCalculated EMI: %f",EMI);
                 fordelay(1000000000);
-                printf("\nApply for loan? (y/n)");
+                printf("\nApply for loan? (y/n): ");
                 scanf("%s",&ch);
                 if (ch == 'n'){
                     printf("\nOperation canceled by user.\nreturning...");
@@ -187,8 +192,8 @@ void loan(void)
                 }
                 else if(ch == 'y'){
                     printf("\nProcessing...");
-                    FILE *restrict const loanptr = fopen("loandetails.txt","a");
-                    fprintf(loanptr,"%d %s %d/%d/%d %f %f\n",ln.acc_no, ln.name, ln.currloan.day, ln.currloan.month, ln.currloan.year, ln.amt, EMI);
+                    FILE *loanptr = fopen("loandetails.txt","a");
+                    fprintf(loanptr,"%d %s %d/%d/%d %f %f %d\n",user.acc_no, user.name, user.currloan.day, user.currloan.month, user.currloan.year, amt, EMI, no_of_installments);
                     fclose(loanptr);
                     fordelay(1000000000);
                     printf("\nLoan application successfull\n");

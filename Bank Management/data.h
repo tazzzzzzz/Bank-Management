@@ -27,4 +27,4 @@ typedef struct account{
 
 
 }account;
-account add,upd,check,ln;
+account user;
