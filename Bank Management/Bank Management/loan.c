@@ -75,17 +75,7 @@ void loan(void)
     {
         if(user.acc_no==acc_no)
         {   
-            //FILE *loanptr = fopen("loandetails.txt","r");
-            // while(fscanf(loanptr,"%d %s %d/%d/%d %f %f %d\n",add.acc_no, add.name, add.currloan.day, add.currloan.month, add.currloan.year, add.amt, EMI, no_of_installments)){
-            //     printf("%d",no_of_installments);
-            //     if(add.acc_no == acc_no && (add.currloan.year + (no_of_installments/12)) > t.wYear){
-            //         printf("\nThis account already has an outstanding loan. Kindly select another account...");
-            //         fordelay(1000000000);
-            //         return;
-            //     }
-            
-            // }
-            // fclose(loanptr);
+                                   
             system("cls");
             test=1;
             //Each of the following conditions are used to determine the interest by a certain date based on the type of account
@@ -168,7 +158,8 @@ void loan(void)
                 printf("\nPlease Enter Loan Amount: ");
                 FLUSH
                 amt = getFloat();
-                
+
+                //Entering number of installments
                 inputinstallments:
                 printf("\nPlease enter the number of installments (12, 24 or 48 months): ");
                 no_of_installments = getInt();
@@ -178,19 +169,25 @@ void loan(void)
                 }
                 
                 printf("\nType of Account: %s",user.acc_type);
+                //Calculating EMI based on given criteria
                 EMI = calcEMI(amt, rate, no_of_installments);
 
 
                 printf("\n\nCalculated EMI: %f",EMI);
                 fordelay(1000000000);
+
+                //Confirmation step
                 printf("\nApply for loan? (y/n): ");
                 scanf("%s",&ch);
                 if (ch == 'n'){
+                    //Cancelling loan application process
                     printf("\nOperation canceled by user.\nreturning...");
                     fordelay(1000000000);
                     return;
                 }
                 else if(ch == 'y'){
+                    //Processing loan
+                    //involves writing loan details onto a file based on the given criteria
                     printf("\nProcessing...");
                     FILE *loanptr = fopen("loandetails.txt","a");
                     fprintf(loanptr,"%d %s %d/%d/%d %f %f %d\n",user.acc_no, user.name, user.currloan.day, user.currloan.month, user.currloan.year, amt, EMI, no_of_installments);
