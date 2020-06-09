@@ -10,8 +10,7 @@
 #include "majorfunction.h"
 #include "utilFunctions.h"
 
-//anant.h
-//File so that unit testing of each function works.
+
 void create(void){
     account check;
     int choice;
@@ -121,7 +120,7 @@ amount_to_deposit:
     printf("\nEnter the amount to deposit:$");
     FLUSH
     user.amt = getFloat();
-    if(user.amt<=10)
+    if(user.amt<10)
     {
         printf("You need to deposit a minimum of $10.");
         goto amount_to_deposit;
@@ -333,119 +332,7 @@ void closeAccount(void)
     }
 }
 
-// void transfer(void){
-    
-//     int choice, test = 0;
-//     FILE *old, *newrec;
-//     old = fopen("record.txt", "r");
-//     newrec = fopen("new.txt", "w");
 
-//     printf("\nEnter the account no. of the payer:");
-//     FLUSH
-// payer:
-//     long payerAccount;
-//     payerAccount = getLong();
-//     int x = 0;
-
-//     while (fscanf(old, FORMAT, SCANFILE(add)) != EOF)
-//     {
-//         printf(FORMAT,PRINTFILE(add));
-//         if (payerAccount == user.acc_no)
-//         {
-//             if(strcmpi(user.acc_type, "fixed1") == 0 || strcmpi(user.acc_type, "fixed2") == 0 || strcmpi(user.acc_type, "fixed3") == 0){
-//                 printf("\a\a\a\n\nYou cannot deposit or withdraw cash from fixed accounts. Kindly wait until more transaction features are made available.");            
-//                 break;
-//             }
-//             else{
-//                 int x = 1; 
-//                 break;
-//             }
-//             fseek(old, 0, SEEK_SET);
-//             goto payer;
-//             break;
-//             fordelay(1000000000);
-//         }
-//     }
-
-//     while (fscanf(old, FORMAT, SCANFILE(add)) != EOF)
-//     {
-//         if (user.acc_no == payerAccount)
-//         {
-//             test = 1;
-//             if (strcmpi(user.acc_type, "fixed1") == 0 || strcmpi(user.acc_type, "fixed2") == 0 || strcmpi(user.acc_type, "fixed3") == 0)
-//             {
-//                 printf("\a\a\a\n\nYou cannot deposit or withdraw cash from fixed accounts. Kindly wait until more transaction features are made available.");
-//                 fordelay(1000000000);
-//                 system("cls");
-//                 return;
-//             }
-//         transact_account:
-//             if (choice == 1)
-//             {
-//                 FLUSH
-//                 printf("\nEnter the amount you want to deposit: $");
-//                 float transactionAmount = getFloat();             
-//                 user.amt +=  transactionAmount;
-//                 fprintf(newrec, FORMAT, PRINTFILE(add));
-//                 printf("\n\nDeposited successfully!");
-//             }
-//             else if(choice == 2)
-//             {
-//                 FLUSH
-//                 printf("\nEnter the amount you want to withdraw: $");
-//                  float  transactionAmount = getFloat();
-//                 if(user.amt-10< transactionAmount)
-//                 {
-//                     printf("\n\nTransaction declined. \nInsufficient Funds in account.");
-//                     goto transact_account;
-//                 }  
-//                 else
-//                     user.amt -=  transactionAmount;
-//                 fprintf(newrec, FORMAT, PRINTFILE(add));
-//                 printf("\n\nWithdrawn successfully!");
-//             }
-//         }
-//         else
-//         {
-//             fprintf(newrec, FORMAT, PRINTFILE(add));
-//         }
-//     }
-//     fclose(old);
-//     fclose(newrec);
-//     remove("record.txt");
-//     rename("new.txt", "record.txt");
-
-//     if (test != 1)
-//     {
-//         printf("\n\nRecord not found!!");
-//     transact_invalid:
-//         printf("\n\n\nEnter 0 to try again,1 to return to main menu and 2 to exit:");
-//         main_exit = getInt();
-//         system("cls");
-//         if (main_exit == 0)
-//             transact();
-//         else if (main_exit == 1)
-//             return;
-//         else if (main_exit == 2)
-//             exit(0);
-//         else
-//         {
-//             printf("\nInvalid  Input.");
-//             goto transact_invalid;
-//         }
-//     }
-//     else
-//     {
-//         printf("\nEnter 1 to go to the main menu and any other number to exit. ");
-//         main_exit = getInt();
-//         system("cls");
-//         if (main_exit == 1)
-//             return;
-//         else
-//             exit(0);
-//     }
-// }
-//arjun.h
 void view_list()
 {
     /*

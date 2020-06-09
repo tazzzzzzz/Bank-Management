@@ -5,7 +5,7 @@
 #include <string.h>
 #include <conio.h>
 #include <windows.h>
-
+#define PHONENUMBERLENGTH 8
 int getInt(){
     int num = 0, ch;
     do{
@@ -64,7 +64,7 @@ long phoneNumber()
 {
 	char s[11];
 	int cnt=0;
- 	while(cnt<10) //atmost 8 digits
+ 	while(cnt<PHONENUMBERLENGTH) //atmost 8 digits
  	{
  		s[cnt]=getchar();
  		if(!isdigit(s[cnt]))//break if non digit entered
@@ -74,7 +74,7 @@ long phoneNumber()
  		}
  		cnt++;
 	}
-    if(cnt!=10){
+    if(cnt!=PHONENUMBERLENGTH){
         printf("Enter a valid phone number. \n");
         return -1;
     }
